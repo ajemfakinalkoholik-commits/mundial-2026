@@ -35,18 +35,18 @@
                 
                 {% for pred in user.recent %}
                     <td style="text-align: center;">
-                        {% if pred and pred.p1 is not none %}
-                            <div style="font-weight: bold; margin-bottom: 5px;">{{ pred.p1 }}:{{ pred.p2 }}</div>
+                        {% if pred and pred.pred_1 is not none %}
+                            <div style="font-weight: bold; margin-bottom: 5px;">{{ pred.pred_1 }}:{{ pred.pred_2 }}</div>
                             <span style="
                                 display: inline-block;
                                 padding: 3px 8px;
                                 border-radius: 12px;
                                 font-size: 0.8rem;
                                 font-weight: bold;
-                                background: {% if pred.pts == 10 %}var(--success){% elif pred.pts == 2 %}var(--warning){% elif last_matches[loop.index0].played %}var(--danger){% else %}rgba(255,255,255,0.1){% endif %};
-                                color: {% if pred.pts > 0 or last_matches[loop.index0].played %}#000{% else %}white{% endif %};
+                                background: {% if pred.points == 10 %}var(--success){% elif pred.points == 2 %}var(--warning){% elif last_matches[loop.index0].played %}var(--danger){% else %}rgba(255,255,255,0.1){% endif %};
+                                color: {% if pred.points > 0 or last_matches[loop.index0].played %}#000{% else %}white{% endif %};
                             ">
-                                {% if last_matches[loop.index0].played %}+{{ pred.pts }}{% else %}-{% endif %}
+                                {% if last_matches[loop.index0].played %}+{{ pred.points }}{% else %}-{% endif %}
                             </span>
                         {% else %}
                             <span style="color: #555; font-size: 0.8rem;">Brak</span>
