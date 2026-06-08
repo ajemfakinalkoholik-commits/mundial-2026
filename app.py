@@ -149,7 +149,7 @@ def dashboard():
                 'time': p.updated_at.strftime('%d.%m %H:%M') if p.updated_at else ''
             })
             
-    return render_template('dashboard.html', grouped=grouped, pred_dict=pred_dict, others_dict=others_dict)
+    return render_template('dashboard.html', grouped=grouped, pred_dict=pred_dict, others_dict=others_dict, now=datetime.now())
 
 @app.route('/save_prediction', methods=['POST'])
 @login_required
