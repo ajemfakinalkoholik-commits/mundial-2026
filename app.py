@@ -91,15 +91,23 @@ def login():
         return redirect(url_for('dashboard'))
     
     if request.method == 'POST':
-        email = request.form.get('email').strip().lower()
-        user = User.query.filter_by(email=email).first()
+        user_name = request.form.get('user_name')
+        password = request.form.get('password')
+        
+        user = User.query.filter_by(name=user_name).first()
         if user:
+            if user.is_admin:
+                if password != 'tonieto':
+                    flash('Nieprawidłowe hasło administratora.', 'error')
+                    return redirect(url_for('login'))
             login_user(user, remember=True)
             return redirect(url_for('dashboard'))
         else:
-            flash('Ten email nie znajduje się na białej liście graczy.', 'error')
+            flash('Błąd logowania.', 'error')
             
-    return render_template('login.html')
+    # Get all users for the grid
+    users = User.query.order_by(User.id).all()
+    return render_template('login.html', users=users)
 
 @app.route('/logout')
 @login_required
