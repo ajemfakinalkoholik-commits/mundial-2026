@@ -1,8 +1,8 @@
 import os
 import random
 from datetime import datetime, timedelta
-import update_excel
 from app import app, db, User, Match, Prediction, calculate_points
+import matches_data
 
 def reset_and_seed():
     with app.app_context():
@@ -23,7 +23,8 @@ def reset_and_seed():
         db.session.commit()
         
         print("Ładowanie meczów...")
-        groups, matches = update_excel.parse_schedule()
+        groups = matches_data.GROUPS
+        matches = matches_data.MATCHES
         for g_name, match_list in matches.items():
             g_safe = g_name.replace('Group', 'Grupa')
             for m in match_list:
