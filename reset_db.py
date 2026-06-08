@@ -72,32 +72,7 @@ def reset_and_seed():
                 db.session.add(new_match)
         db.session.commit()
         
-        print("Symulacja kilku rozegranych meczów...")
-        # Get first 5 matches
-        first_5 = Match.query.order_by(Match.id).limit(5).all()
-        users = User.query.all()
-        
-        for match in first_5:
-            match.start_time = datetime.now() - timedelta(days=1)
-            match.played = True
-            match.result_1 = random.randint(0, 3)
-            match.result_2 = random.randint(0, 3)
-            
-            for u in users:
-                pred = Prediction(
-                    user_id=u.id, 
-                    match_id=match.id,
-                    pred_1=random.randint(0, 3),
-                    pred_2=random.randint(0, 3)
-                )
-                db.session.add(pred)
-        
-        db.session.commit()
-        
-        for match in first_5:
-            calculate_points(match.id)
-            
-        print("Baza zresetowana i w pełni załadowana (z testowymi wynikami)!")
+        print("Baza zresetowana i gotowa do prawdziwej gry!")
 
 if __name__ == '__main__':
     reset_and_seed()
