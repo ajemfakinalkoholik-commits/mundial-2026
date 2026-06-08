@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 40px;">
+    <h1>Pulpit Administratora</h1>
+    <p style="color: var(--text-secondary);">Wpisz oficjalne wyniki meczów. System automatycznie przeliczy punkty wszystkim graczom.</p>
+</div>
+
+<table style="width: 100%; border-collapse: collapse; background: var(--panel-bg); border-radius: 12px; overflow: hidden;">
+    <tr style="background: rgba(255, 255, 255, 0.05);">
+        <th style="padding: 15px;">Mecz</th>
+        <th style="padding: 15px;">Data</th>
+        <th style="padding: 15px;">Kraj 1</th>
+        <th style="padding: 15px;">Wynik</th>
+        <th style="padding: 15px;">Kraj 2</th>
+        <th style="padding: 15px;">Akcja</th>
+    </tr>
+    {% for m in matches %}
+    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center;">
+        <form method="POST">
+            <input type="hidden" name="match_id" value="{{ m.id }}">
+            <td style="padding: 15px; color: var(--text-secondary);">{{ m.group_name }}</td>
+            <td style="padding: 15px;">{{ m.date_time_str }}</td>
+            <td style="padding: 15px; font-weight: bold;">{{ m.team1 }}</td>
+            <td style="padding: 15px;">
+                <input type="number" name="res_1" style="width: 50px; padding: 5px; text-align: center; border-radius: 4px; border: 1px solid #555; background: #222; color: white;" value="{{ m.result_1 if m.result_1 is not none else '' }}">
+                :
+                <input type="number" name="res_2" style="width: 50px; padding: 5px; text-align: center; border-radius: 4px; border: 1px solid #555; background: #222; color: white;" value="{{ m.result_2 if m.result_2 is not none else '' }}">
+            </td>
+            <td style="padding: 15px; font-weight: bold;">{{ m.team2 }}</td>
+            <td style="padding: 15px;">
+                <button type="submit" style="padding: 8px 15px; background: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer;">Zapisz Oficjalny Wynik</button>
+            </td>
+        </form>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
