@@ -48,6 +48,7 @@ def flag_filter(team_code):
 
 # --- MODELS ---
 class User(UserMixin, db.Model):
+    __tablename__ = 'typer_users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     name = db.Column(db.String(100), nullable=False)
@@ -55,6 +56,7 @@ class User(UserMixin, db.Model):
     predictions = db.relationship('Prediction', backref='user', lazy=True)
 
 class Match(db.Model):
+    __tablename__ = 'typer_matches'
     id = db.Column(db.Integer, primary_key=True)
     group_name = db.Column(db.String(50))
     date_time_str = db.Column(db.String(100)) # e.g. "11 Czerwiec - 21:00"
@@ -67,9 +69,10 @@ class Match(db.Model):
     predictions = db.relationship('Prediction', backref='match', lazy=True)
 
 class Prediction(db.Model):
+    __tablename__ = 'typer_predictions'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    match_id = db.Column(db.Integer, db.ForeignKey('match.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('typer_users.id'), nullable=False)
+    match_id = db.Column(db.Integer, db.ForeignKey('typer_matches.id'), nullable=False)
     pred_1 = db.Column(db.Integer, nullable=True)
     pred_2 = db.Column(db.Integer, nullable=True)
     points = db.Column(db.Integer, default=0)
