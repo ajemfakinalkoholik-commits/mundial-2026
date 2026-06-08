@@ -132,4 +132,15 @@ async function savePrediction(e, matchId) {
     }
 }
 </script>
+
+<audio id="welcomeSound" src="{{ url_for('static', filename='login_sound.mp3') }}"></audio>
+<script>
+    // Odpalenie dźwięku od razu po wejściu na stronę
+    window.addEventListener('DOMContentLoaded', () => {
+        const audio = document.getElementById('welcomeSound');
+        audio.volume = 0.5; // Głośność 50%
+        audio.play().catch(e => console.log("Przeglądarka zablokowała autoodtwarzanie"));
+    });
+</script>
+
 {% endblock %}
