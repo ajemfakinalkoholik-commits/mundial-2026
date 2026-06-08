@@ -121,7 +121,7 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    matches = Match.query.order_by(Match.start_time).all()
+    matches = Match.query.order_by(Match.group_name, Match.start_time).all()
     # Group matches by group_name
     grouped = {}
     for m in matches:
@@ -239,7 +239,7 @@ def admin():
             calculate_points(match.id)
             flash('Zapisano wynik!', 'success')
             
-    matches = Match.query.all()
+    matches = Match.query.order_by(Match.group_name, Match.start_time).all()
     return render_template('admin.html', matches=matches)
 
 def calculate_points(match_id):
