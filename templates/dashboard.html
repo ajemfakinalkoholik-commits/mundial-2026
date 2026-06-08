@@ -3,7 +3,7 @@
 {% block content %}
 <div style="margin-bottom: 40px; text-align: center;">
     <h1>Twoje Typy</h1>
-    <p style="color: var(--text-secondary);">Wpisz swoje typy. Dokładny wynik: 10pkt, rozsztrzygnięcie: 2pkt. System zapisze je automatycznie po kliknięciu "Zapisz typ".</p>
+    <p style="color: var(--text-secondary);">Wpisz wyniki. System zapisze je automatycznie po kliknięciu "Zapisz".</p>
 </div>
 
 {% for group_name, match_list in grouped.items() %}
@@ -29,6 +29,13 @@
             
             <div class="match-card {{ status_class }}" id="match-{{ m.id }}">
                 <div class="match-date">{{ m.date_time_str }}</div>
+                {% if m.highlights_url %}
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <a href="{{ m.highlights_url }}" target="_blank" style="color: #ff4757; text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 5px;">
+                        ▶ Oglądaj skrót
+                    </a>
+                </div>
+                {% endif %}
                 
                 <div class="teams">
                     <div class="team">
@@ -58,10 +65,6 @@
                     <button type="submit" class="save-btn" id="btn-{{ m.id }}">Zapisz typ</button>
                 </form>
                 
-                <div style="margin-top: 15px; text-align: center; font-size: 0.85rem; color: var(--text-secondary); background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
-                    🔒 Typy pozostałych graczy zostaną odkryte po pierwszym gwizdku.
-                </div>
-                
                 {% else %}
                 <div style="text-align: center; margin-top: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
                     <span style="color: var(--text-secondary); font-size: 0.9rem;">Twój typ: </span>
@@ -72,17 +75,18 @@
                         {% if m.played %}+{{ pred.points if pred else 0 }} pkt{% else %}Oczekuje na wynik oficjalny...{% endif %}
                     </div>
                 </div>
+                {% endif %}
                 
                 <!-- Others' bets -->
-                <div style="margin-top: 10px;">
+                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
                     <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px; text-align: center;">Typy pozostałych graczy:</div>
                     {% set others = others_dict.get(m.id, []) %}
                     {% if others %}
                         <div style="display: flex; flex-direction: column; gap: 5px;">
                         {% for op in others %}
-                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; background: rgba(0,0,0,0.2); padding: 5px 10px; border-radius: 4px;">
-                                <span>{{ op.name }}</span>
-                                <span style="font-weight: bold;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; background: rgba(0,0,0,0.2); padding: 5px 10px; border-radius: 4px;">
+                                <span>{{ op.name }} <span style="font-size: 0.7rem; color: #777; margin-left: 5px;">{{ op.time }}</span></span>
+                                <span style="font-weight: bold; color: {% if m.played and op.pts == 10 %}var(--success){% elif m.played and op.pts == 2 %}var(--warning){% elif m.played %}var(--danger){% else %}white{% endif %};">
                                     {% if op.p1 is not none %}{{ op.p1 }} : {{ op.p2 }}{% else %}Brak{% endif %}
                                 </span>
                             </div>
@@ -92,7 +96,6 @@
                         <div style="text-align: center; font-size: 0.85rem; color: #555;">Nikt inny nie obstawił.</div>
                     {% endif %}
                 </div>
-                {% endif %}
             </div>
         {% endfor %}
     </div>

@@ -81,7 +81,7 @@ MATCHES = {
             "team2": "South Africa"
         },
         {
-            "date": "2026-06-12 | 04:00 (Czas PL)",
+            "date": "2026-06-11 | 04:00 (Czas PL)",
             "team1": "South Korea",
             "team2": "Czech Republic"
         },
@@ -91,17 +91,17 @@ MATCHES = {
             "team2": "South Africa"
         },
         {
-            "date": "2026-06-19 | 03:00 (Czas PL)",
+            "date": "2026-06-18 | 03:00 (Czas PL)",
             "team1": "Mexico",
             "team2": "South Korea"
         },
         {
-            "date": "2026-06-25 | 03:00 (Czas PL)",
+            "date": "2026-06-24 | 03:00 (Czas PL)",
             "team1": "Czech Republic",
             "team2": "Mexico"
         },
         {
-            "date": "2026-06-25 | 03:00 (Czas PL)",
+            "date": "2026-06-24 | 03:00 (Czas PL)",
             "team1": "South Africa",
             "team2": "South Korea"
         }
@@ -123,7 +123,7 @@ MATCHES = {
             "team2": "Bosnia and Herzegovina"
         },
         {
-            "date": "2026-06-19 | 00:00 (Czas PL)",
+            "date": "2026-06-18 | 00:00 (Czas PL)",
             "team1": "Canada",
             "team2": "Qatar"
         },
@@ -140,44 +140,44 @@ MATCHES = {
     ],
     "Group C": [
         {
-            "date": "2026-06-14 | 00:00 (Czas PL)",
+            "date": "2026-06-13 | 00:00 (Czas PL)",
             "team1": "Brazil",
             "team2": "Morocco"
         },
         {
-            "date": "2026-06-14 | 03:00 (Czas PL)",
+            "date": "2026-06-13 | 03:00 (Czas PL)",
             "team1": "Haiti",
             "team2": "Scotland"
         },
         {
-            "date": "2026-06-20 | 00:00 (Czas PL)",
+            "date": "2026-06-19 | 00:00 (Czas PL)",
             "team1": "Scotland",
             "team2": "Morocco"
         },
         {
-            "date": "2026-06-20 | 03:00 (Czas PL)",
+            "date": "2026-06-19 | 02:30 (Czas PL)",
             "team1": "Brazil",
             "team2": "Haiti"
         },
         {
-            "date": "2026-06-25 | 00:00 (Czas PL)",
+            "date": "2026-06-24 | 00:00 (Czas PL)",
             "team1": "Scotland",
             "team2": "Brazil"
         },
         {
-            "date": "2026-06-25 | 00:00 (Czas PL)",
+            "date": "2026-06-24 | 00:00 (Czas PL)",
             "team1": "Morocco",
             "team2": "Haiti"
         }
     ],
     "Group D": [
         {
-            "date": "2026-06-13 | 03:00 (Czas PL)",
+            "date": "2026-06-12 | 03:00 (Czas PL)",
             "team1": "United States",
             "team2": "Paraguay"
         },
         {
-            "date": "2026-06-14 | 06:00 (Czas PL)",
+            "date": "2026-06-13 | 06:00 (Czas PL)",
             "team1": "Australia",
             "team2": "Turkey"
         },
@@ -187,17 +187,17 @@ MATCHES = {
             "team2": "Australia"
         },
         {
-            "date": "2026-06-19 | 06:00 (Czas PL)",
+            "date": "2026-06-19 | 05:00 (Czas PL)",
             "team1": "Turkey",
             "team2": "Paraguay"
         },
         {
-            "date": "2026-06-26 | 04:00 (Czas PL)",
+            "date": "2026-06-25 | 04:00 (Czas PL)",
             "team1": "Turkey",
             "team2": "United States"
         },
         {
-            "date": "2026-06-26 | 04:00 (Czas PL)",
+            "date": "2026-06-25 | 04:00 (Czas PL)",
             "team1": "Paraguay",
             "team2": "Australia"
         }
@@ -209,39 +209,39 @@ MATCHES = {
             "team2": "Cura\u00e7ao"
         },
         {
-            "date": "2026-06-15 | 01:00 (Czas PL)",
+            "date": "2026-06-14 | 01:00 (Czas PL)",
             "team1": "Ivory Coast",
             "team2": "Ecuador"
         },
         {
-            "date": "2026-06-21 | 22:00 (Czas PL)",
+            "date": "2026-06-20 | 22:00 (Czas PL)",
             "team1": "Germany",
             "team2": "Ivory Coast"
         },
         {
-            "date": "2026-06-21 | 02:00 (Czas PL)",
+            "date": "2026-06-20 | 02:00 (Czas PL)",
             "team1": "Ecuador",
             "team2": "Cura\u00e7ao"
         },
         {
-            "date": "2026-06-26 | 00:00 (Czas PL)",
+            "date": "2026-06-25 | 22:00 (Czas PL)",
             "team1": "Cura\u00e7ao",
             "team2": "Ivory Coast"
         },
         {
-            "date": "2026-06-26 | 00:00 (Czas PL)",
+            "date": "2026-06-25 | 22:00 (Czas PL)",
             "team1": "Ecuador",
             "team2": "Germany"
         }
     ],
     "Group F": [
         {
-            "date": "2026-06-15 | 00:00 (Czas PL)",
+            "date": "2026-06-14 | 22:00 (Czas PL)",
             "team1": "Netherlands",
             "team2": "Japan"
         },
         {
-            "date": "2026-06-15 | 04:00 (Czas PL)",
+            "date": "2026-06-14 | 04:00 (Czas PL)",
             "team1": "Sweden",
             "team2": "Tunisia"
         },
@@ -256,12 +256,12 @@ MATCHES = {
             "team2": "Japan"
         },
         {
-            "date": "2026-06-26 | 01:00 (Czas PL)",
+            "date": "2026-06-25 | 01:00 (Czas PL)",
             "team1": "Japan",
             "team2": "Sweden"
         },
         {
-            "date": "2026-06-26 | 01:00 (Czas PL)",
+            "date": "2026-06-25 | 01:00 (Czas PL)",
             "team1": "Tunisia",
             "team2": "Netherlands"
         }
@@ -273,27 +273,27 @@ MATCHES = {
             "team2": "Egypt"
         },
         {
-            "date": "2026-06-16 | 03:00 (Czas PL)",
+            "date": "2026-06-15 | 03:00 (Czas PL)",
             "team1": "Iran",
             "team2": "New Zealand"
         },
         {
-            "date": "2026-06-22 | 01:00 (Czas PL)",
+            "date": "2026-06-21 | 21:00 (Czas PL)",
             "team1": "Belgium",
             "team2": "Iran"
         },
         {
-            "date": "2026-06-22 | 03:00 (Czas PL)",
+            "date": "2026-06-21 | 03:00 (Czas PL)",
             "team1": "New Zealand",
             "team2": "Egypt"
         },
         {
-            "date": "2026-06-27 | 05:00 (Czas PL)",
+            "date": "2026-06-26 | 05:00 (Czas PL)",
             "team1": "Egypt",
             "team2": "Iran"
         },
         {
-            "date": "2026-06-27 | 05:00 (Czas PL)",
+            "date": "2026-06-26 | 05:00 (Czas PL)",
             "team1": "New Zealand",
             "team2": "Belgium"
         }
@@ -305,7 +305,7 @@ MATCHES = {
             "team2": "Cape Verde"
         },
         {
-            "date": "2026-06-16 | 00:00 (Czas PL)",
+            "date": "2026-06-15 | 00:00 (Czas PL)",
             "team1": "Saudi Arabia",
             "team2": "Uruguay"
         },
@@ -315,17 +315,17 @@ MATCHES = {
             "team2": "Saudi Arabia"
         },
         {
-            "date": "2026-06-22 | 00:00 (Czas PL)",
+            "date": "2026-06-21 | 00:00 (Czas PL)",
             "team1": "Uruguay",
             "team2": "Cape Verde"
         },
         {
-            "date": "2026-06-27 | 02:00 (Czas PL)",
+            "date": "2026-06-26 | 02:00 (Czas PL)",
             "team1": "Cape Verde",
             "team2": "Saudi Arabia"
         },
         {
-            "date": "2026-06-27 | 02:00 (Czas PL)",
+            "date": "2026-06-26 | 02:00 (Czas PL)",
             "team1": "Uruguay",
             "team2": "Spain"
         }
@@ -337,7 +337,7 @@ MATCHES = {
             "team2": "Senegal"
         },
         {
-            "date": "2026-06-17 | 00:00 (Czas PL)",
+            "date": "2026-06-16 | 00:00 (Czas PL)",
             "team1": "Iraq",
             "team2": "Norway"
         },
@@ -347,7 +347,7 @@ MATCHES = {
             "team2": "Iraq"
         },
         {
-            "date": "2026-06-23 | 02:00 (Czas PL)",
+            "date": "2026-06-22 | 02:00 (Czas PL)",
             "team1": "Norway",
             "team2": "Senegal"
         },
@@ -364,12 +364,12 @@ MATCHES = {
     ],
     "Group J": [
         {
-            "date": "2026-06-17 | 03:00 (Czas PL)",
+            "date": "2026-06-16 | 03:00 (Czas PL)",
             "team1": "Argentina",
             "team2": "Algeria"
         },
         {
-            "date": "2026-06-17 | 06:00 (Czas PL)",
+            "date": "2026-06-16 | 06:00 (Czas PL)",
             "team1": "Austria",
             "team2": "Jordan"
         },
@@ -379,17 +379,17 @@ MATCHES = {
             "team2": "Austria"
         },
         {
-            "date": "2026-06-23 | 05:00 (Czas PL)",
+            "date": "2026-06-22 | 05:00 (Czas PL)",
             "team1": "Jordan",
             "team2": "Algeria"
         },
         {
-            "date": "2026-06-28 | 04:00 (Czas PL)",
+            "date": "2026-06-27 | 04:00 (Czas PL)",
             "team1": "Algeria",
             "team2": "Austria"
         },
         {
-            "date": "2026-06-28 | 04:00 (Czas PL)",
+            "date": "2026-06-27 | 04:00 (Czas PL)",
             "team1": "Jordan",
             "team2": "Argentina"
         }
@@ -401,7 +401,7 @@ MATCHES = {
             "team2": "DR Congo"
         },
         {
-            "date": "2026-06-18 | 04:00 (Czas PL)",
+            "date": "2026-06-17 | 04:00 (Czas PL)",
             "team1": "Uzbekistan",
             "team2": "Colombia"
         },
@@ -411,17 +411,17 @@ MATCHES = {
             "team2": "Uzbekistan"
         },
         {
-            "date": "2026-06-24 | 04:00 (Czas PL)",
+            "date": "2026-06-23 | 04:00 (Czas PL)",
             "team1": "Colombia",
             "team2": "DR Congo"
         },
         {
-            "date": "2026-06-28 | 01:30 (Czas PL)",
+            "date": "2026-06-27 | 01:30 (Czas PL)",
             "team1": "Colombia",
             "team2": "Portugal"
         },
         {
-            "date": "2026-06-28 | 01:30 (Czas PL)",
+            "date": "2026-06-27 | 01:30 (Czas PL)",
             "team1": "DR Congo",
             "team2": "Uzbekistan"
         }
@@ -433,7 +433,7 @@ MATCHES = {
             "team2": "Croatia"
         },
         {
-            "date": "2026-06-18 | 01:00 (Czas PL)",
+            "date": "2026-06-17 | 01:00 (Czas PL)",
             "team1": "Ghana",
             "team2": "Panama"
         },
@@ -443,7 +443,7 @@ MATCHES = {
             "team2": "Ghana"
         },
         {
-            "date": "2026-06-24 | 01:00 (Czas PL)",
+            "date": "2026-06-23 | 01:00 (Czas PL)",
             "team1": "Panama",
             "team2": "Croatia"
         },

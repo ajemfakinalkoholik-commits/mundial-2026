@@ -68,6 +68,7 @@ class Match(db.Model):
     result_1 = db.Column(db.Integer, nullable=True)
     result_2 = db.Column(db.Integer, nullable=True)
     played = db.Column(db.Boolean, default=False)
+    highlights_url = db.Column(db.String(500), nullable=True)
     predictions = db.relationship('Prediction', backref='match', lazy=True)
 
 class Prediction(db.Model):
@@ -78,6 +79,7 @@ class Prediction(db.Model):
     pred_1 = db.Column(db.Integer, nullable=True)
     pred_2 = db.Column(db.Integer, nullable=True)
     points = db.Column(db.Integer, default=0)
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -144,10 +146,11 @@ def dashboard():
                 'name': users_cache[p.user_id],
                 'p1': p.pred_1,
                 'p2': p.pred_2,
-                'pts': p.points
+                'pts': p.points,
+                'time': p.updated_at.strftime('%d.%m %H:%M') if p.updated_at else ''
             })
             
-    return render_template('dashboard.html', grouped=grouped, pred_dict=pred_dict, others_dict=others_dict, now=datetime.now())
+    return render_template('dashboard.html', grouped=grouped, pred_dict=pred_dict, others_dict=others_dict)
 
 @app.route('/save_prediction', methods=['POST'])
 @login_required
@@ -179,6 +182,7 @@ def save_prediction():
         else:
             pred.pred_1 = int(pred_1)
             pred.pred_2 = int(pred_2)
+        pred.updated_at = datetime.now()
         db.session.commit()
         return jsonify({'success': True})
     except Exception as e:
@@ -224,6 +228,7 @@ def admin():
         match_id = request.form.get('match_id')
         res_1 = request.form.get('res_1')
         res_2 = request.form.get('res_2')
+        h_url = request.form.get('highlights_url')
         
         match = db.session.get(Match, match_id)
         if match:
@@ -235,6 +240,8 @@ def admin():
                 match.result_1 = int(res_1)
                 match.result_2 = int(res_2)
                 match.played = True
+            
+            match.highlights_url = h_url if h_url else None
             db.session.commit()
             
             # Recalculate points for this match
