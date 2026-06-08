@@ -39,7 +39,9 @@ TEAM_TO_FLAG = {
     'POR': 'pt', 'COD': 'cd', 'WAL': 'gb-wls', 'CMR': 'cm',
     'ENG': 'gb-eng', 'CRO': 'hr', 'CIV': 'ci', 'JAM': 'jm',
     'ITA': 'it', 'UKR': 'ua', 'TUR': 'tr', 'TUN': 'tn',
-    'CHI': 'cl', 'SWE': 'se', 'POL': 'pl', 'DEN': 'dk'
+    'CHI': 'cl', 'SWE': 'se', 'POL': 'pl', 'DEN': 'dk',
+    'IRQ': 'iq', 'NOR': 'no', 'AUT': 'at', 'JOR': 'jo',
+    'UZB': 'uz', 'GHA': 'gh'
 }
 
 @app.template_filter('flag')
