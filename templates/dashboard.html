@@ -29,13 +29,6 @@
             
             <div class="match-card {{ status_class }}" id="match-{{ m.id }}">
                 <div class="match-date">{{ m.date_time_str }}</div>
-                {% if m.highlights_url %}
-                <div style="text-align: center; margin-bottom: 10px;">
-                    <a href="{{ m.highlights_url }}" target="_blank" style="color: #ff4757; text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 5px;">
-                        ▶ Oglądaj skrót
-                    </a>
-                </div>
-                {% endif %}
                 
                 <div class="teams">
                     <div class="team">

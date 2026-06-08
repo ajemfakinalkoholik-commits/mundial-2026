@@ -68,7 +68,6 @@ class Match(db.Model):
     result_1 = db.Column(db.Integer, nullable=True)
     result_2 = db.Column(db.Integer, nullable=True)
     played = db.Column(db.Boolean, default=False)
-    highlights_url = db.Column(db.String(500), nullable=True)
     predictions = db.relationship('Prediction', backref='match', lazy=True)
 
 class Prediction(db.Model):
@@ -228,7 +227,6 @@ def admin():
         match_id = request.form.get('match_id')
         res_1 = request.form.get('res_1')
         res_2 = request.form.get('res_2')
-        h_url = request.form.get('highlights_url')
         
         match = db.session.get(Match, match_id)
         if match:
@@ -240,8 +238,6 @@ def admin():
                 match.result_1 = int(res_1)
                 match.result_2 = int(res_2)
                 match.played = True
-            
-            match.highlights_url = h_url if h_url else None
             db.session.commit()
             
             # Recalculate points for this match
