@@ -190,8 +190,8 @@ def leaderboard():
     
     # Get last 5 matches that have started
     last_5_matches = Match.query.filter(Match.start_time <= datetime.now()).order_by(Match.start_time.desc()).limit(5).all()
-    # Reverse to show chronologically from left to right
-    last_5_matches.reverse()
+    # Zostawiamy order_by(desc), aby pokazywac od najnowszego do najstarszego
+    # last_5_matches.reverse()
     
     all_predictions = Prediction.query.all()
     
