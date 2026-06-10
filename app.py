@@ -88,13 +88,13 @@ def load_user(user_id):
 @app.route('/')
 def index():
     if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
+        logout_user()
     return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
+        logout_user()
     
     if request.method == 'POST':
         user_name = request.form.get('user_name')
