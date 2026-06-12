@@ -255,6 +255,8 @@ def admin():
         res_1 = request.form.get('res_1')
         res_2 = request.form.get('res_2')
         
+        new_date = request.form.get('new_date')
+        
         match = db.session.get(Match, match_id)
         if match:
             if res_1 == "" or res_2 == "":
@@ -265,6 +267,16 @@ def admin():
                 match.result_1 = int(res_1)
                 match.result_2 = int(res_2)
                 match.played = True
+                
+            if new_date:
+                try:
+                    # Format z przeglądarki: YYYY-MM-DDTHH:MM
+                    st = datetime.strptime(new_date, "%Y-%m-%dT%H:%M")
+                    match.start_time = st
+                    match.date_time_str = f"{st.strftime('%Y-%m-%d')} | {st.strftime('%H:%M')} (Edytowane)"
+                except Exception:
+                    pass
+                    
             db.session.commit()
             
             # Recalculate points for this match
