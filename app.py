@@ -283,7 +283,7 @@ def admin():
             calculate_points(match.id)
             flash('Zapisano wynik!', 'success')
             
-    matches = Match.query.order_by(Match.group_name, Match.start_time).all()
+    matches = Match.query.order_by(Match.start_time).all()
     all_users = User.query.order_by(User.name).all()
     return render_template('admin.html', matches=matches, all_users=all_users)
 
