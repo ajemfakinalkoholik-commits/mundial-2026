@@ -228,6 +228,16 @@ def admin():
         return redirect(url_for('dashboard'))
         
     if request.method == 'POST':
+        old_name = request.form.get('old_name')
+        new_name = request.form.get('new_name')
+        if old_name and new_name:
+            user = User.query.filter_by(name=old_name).first()
+            if user:
+                user.name = new_name
+                db.session.commit()
+                flash(f'Zmieniono imię gracza na: {new_name}!', 'success')
+            return redirect(url_for('admin'))
+
         match_id = request.form.get('match_id')
         res_1 = request.form.get('res_1')
         res_2 = request.form.get('res_2')
@@ -249,7 +259,8 @@ def admin():
             flash('Zapisano wynik!', 'success')
             
     matches = Match.query.order_by(Match.group_name, Match.start_time).all()
-    return render_template('admin.html', matches=matches)
+    all_users = User.query.order_by(User.name).all()
+    return render_template('admin.html', matches=matches, all_users=all_users)
 
 def calculate_points(match_id):
     match = db.session.get(Match, match_id)
