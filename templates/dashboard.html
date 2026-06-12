@@ -1,18 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="text-align: center; margin-bottom: 20px;">
-    <h2>Witaj w Typerze!</h2>
-    <p style="color: var(--text-secondary);">Wytypuj wyniki nadchodzących spotkań.</p>
-</div>
 
-<div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
-    <a href="{{ url_for('dashboard', sort='group') }}" style="padding: 8px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; background: {% if request.args.get('sort', 'group') == 'group' %}var(--accent){% else %}rgba(255,255,255,0.1){% endif %}; color: white; transition: 0.2s;">Po Grupie</a>
-    <a href="{{ url_for('dashboard', sort='date') }}" style="padding: 8px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; background: {% if request.args.get('sort') == 'date' %}var(--accent){% else %}rgba(255,255,255,0.1){% endif %}; color: white; transition: 0.2s;">Po Dacie</a>
-</div>
 
-<div style="overflow-x: auto; padding-bottom: 20px; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-    <table class="leaderboard-table" style="margin-top: 0;">
+<div style="overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+    <table class="leaderboard-table compact-table" style="margin-top: 0; min-width: 600px;">
         <thead>
             <tr style="background: transparent; box-shadow: none;">
                 <th class="col-rank">MSC</th>
@@ -58,6 +50,11 @@
         {% endfor %}
         </tbody>
     </table>
+</div>
+
+<div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 30px;">
+    <a href="{{ url_for('dashboard', sort='group') }}" style="padding: 8px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; background: {% if request.args.get('sort', 'group') == 'group' %}var(--accent){% else %}rgba(255,255,255,0.1){% endif %}; color: white; transition: 0.2s;">Po Grupie</a>
+    <a href="{{ url_for('dashboard', sort='date') }}" style="padding: 8px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; background: {% if request.args.get('sort') == 'date' %}var(--accent){% else %}rgba(255,255,255,0.1){% endif %}; color: white; transition: 0.2s;">Po Dacie</a>
 </div>
 
 {% for group_name, match_list in grouped.items() %}

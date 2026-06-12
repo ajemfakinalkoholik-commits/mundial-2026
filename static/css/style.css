@@ -32,7 +32,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
+  padding: 8px 20px;
   background: var(--panel-bg);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -297,3 +297,16 @@ body {
   .pred-points { padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; }
   .pred-none { font-size: 0.8rem; }
 }
+
+/* Compact Leaderboard Table */
+.compact-table th, .compact-table td { padding: 4px 8px !important; font-size: 0.8rem !important; }
+.compact-table .col-name-val { font-size: 0.85rem !important; padding: 4px !important; }
+.compact-table .col-points-val { font-size: 1rem !important; padding: 4px !important; }
+.compact-table .col-match-val { padding: 4px !important; }
+.compact-table .pred-score { font-size: 0.8rem !important; margin-bottom: 0px !important; }
+.compact-table .pred-points { font-size: 0.65rem !important; padding: 1px 3px !important; }
+.compact-table th .col-match > div { font-size: 0.75rem !important; }
+.compact-table th .col-match span { font-size: 0.7rem !important; }
+
+.compact-table { border-spacing: 0 2px !important; }
+.compact-table tr td { padding: 4px !important; }
