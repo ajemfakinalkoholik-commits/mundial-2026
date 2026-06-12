@@ -3,20 +3,20 @@
 {% block content %}
 <div style="text-align: center; margin-bottom: 40px;">
     <h1>Tabela Typerów na Żywo</h1>
-    <p style="color: var(--text-secondary);">Aktualne wyniki</p>
+    <p style="color: var(--text-secondary);">Kto stawia kolejkę, a kto wygrywa pule?</p>
 </div>
 
 <div style="overflow-x: auto; padding-bottom: 20px;">
-    <table class="leaderboard-table" style="min-width: 800px; margin: 0 auto;">
+    <table class="leaderboard-table">
         <thead>
             <tr style="background: transparent; box-shadow: none;">
-                <th style="padding: 10px; color: var(--text-secondary);">MIEJSCE</th>
-                <th style="padding: 10px; text-align: left; color: var(--text-secondary);">GRACZ</th>
-                <th style="padding: 10px; text-align: center; color: var(--accent);">PUNKTY</th>
+                <th class="col-rank">MSC</th>
+                <th class="col-name" style="text-align: left;">GRACZ</th>
+                <th class="col-points" style="text-align: center;">PKT</th>
                 {% for m in last_matches %}
-                    <th style="padding: 10px; font-size: 0.8rem; color: var(--text-secondary); text-align: center; width: 80px;">
-                        {{ m.team1 }} - {{ m.team2 }}<br>
-                        <span style="font-size: 0.7rem; font-weight: normal;">{{ m.result_1 if m.played else '-' }} : {{ m.result_2 if m.played else '-' }}</span>
+                    <th class="col-match">
+                        <div style="white-space: nowrap;">{{ m.team1 }} - {{ m.team2 }}</div>
+                        <span style="font-weight: normal;">{{ m.result_1 if m.played else '-' }}:{{ m.result_2 if m.played else '-' }}</span>
                     </th>
                 {% endfor %}
             </tr>
@@ -31,26 +31,21 @@
                     {% else %}{{ loop.index }}
                     {% endif %}
                 </td>
-                <td style="font-weight: bold;">{{ user.name }}</td>
-                <td style="text-align: center; font-size: 1.5rem; color: var(--accent); font-weight: bold;">{{ user.points }}</td>
+                <td class="col-name-val">{{ user.name }}</td>
+                <td class="col-points-val">{{ user.points }}</td>
                 
                 {% for pred in user.recent %}
-                    <td style="text-align: center;">
+                    <td class="col-match-val">
                         {% if pred and pred.pred_1 is not none %}
-                            <div style="font-weight: bold; margin-bottom: 5px;">{{ pred.pred_1 }}:{{ pred.pred_2 }}</div>
-                            <span style="
-                                display: inline-block;
-                                padding: 3px 8px;
-                                border-radius: 12px;
-                                font-size: 0.8rem;
-                                font-weight: bold;
+                            <div class="pred-score">{{ pred.pred_1 }}:{{ pred.pred_2 }}</div>
+                            <span class="pred-points" style="
                                 background: {% if pred.points == 10 %}var(--success){% elif pred.points == 2 %}var(--warning){% elif last_matches[loop.index0].played %}var(--danger){% else %}rgba(255,255,255,0.1){% endif %};
                                 color: {% if pred.points > 0 or last_matches[loop.index0].played %}#000{% else %}white{% endif %};
                             ">
                                 {% if last_matches[loop.index0].played %}+{{ pred.points }}{% else %}-{% endif %}
                             </span>
                         {% else %}
-                            <span style="color: #555; font-size: 0.8rem;">Brak</span>
+                            <span class="pred-none">Brak</span>
                         {% endif %}
                     </td>
                 {% endfor %}

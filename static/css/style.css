@@ -272,3 +272,28 @@ body {
 .rank-1 td:first-child { color: #FFD700; font-size: 1.5rem; }
 .rank-2 td:first-child { color: #C0C0C0; font-size: 1.3rem; }
 .rank-3 td:first-child { color: #CD7F32; font-size: 1.2rem; }
+
+/* Leaderboard Mobile Responsiveness */
+.leaderboard-table { width: 100%; max-width: 100%; margin: 20px auto; border-collapse: separate; border-spacing: 0 5px; }
+.col-rank { padding: 10px 5px; color: var(--text-secondary); font-size: 0.8rem; }
+.col-name { padding: 10px 5px; color: var(--text-secondary); font-size: 0.8rem; }
+.col-points { padding: 10px 5px; color: var(--accent); font-size: 0.8rem; }
+.col-match { padding: 10px 2px; font-size: 0.65rem; color: var(--text-secondary); text-align: center; }
+.col-name-val { font-weight: bold; font-size: 0.9rem; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 10px 5px !important; }
+.col-points-val { text-align: center; font-size: 1.2rem !important; color: var(--accent); font-weight: bold; padding: 10px 5px !important; }
+.col-match-val { text-align: center; padding: 10px 2px !important; }
+.pred-score { font-weight: bold; margin-bottom: 3px; font-size: 0.8rem; }
+.pred-points { display: inline-block; padding: 2px 5px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; }
+.pred-none { color: #555; font-size: 0.7rem; }
+
+@media (min-width: 768px) {
+  .leaderboard-table { max-width: 800px; border-spacing: 0 10px; }
+  .col-rank, .col-name, .col-points { padding: 10px; font-size: 1rem; }
+  .col-match { padding: 10px; font-size: 0.8rem; }
+  .col-name-val { font-size: 1.1rem; max-width: none; padding: 20px !important; }
+  .col-points-val { font-size: 1.5rem !important; padding: 20px !important; }
+  .col-match-val { padding: 20px !important; }
+  .pred-score { font-size: 1rem; margin-bottom: 5px; }
+  .pred-points { padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; }
+  .pred-none { font-size: 0.8rem; }
+}
