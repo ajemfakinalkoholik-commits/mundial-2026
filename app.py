@@ -375,6 +375,16 @@ with app.app_context():
     except Exception as e:
         # Kolumna już istnieje lub inny błąd, ignorujemy
         db.session.rollback()
+        
+    # Czyszczenie dopisków w dacie
+    try:
+        matches = Match.query.all()
+        for m in matches:
+            if m.date_time_str:
+                m.date_time_str = m.date_time_str.replace(' (Edytowane)', '').replace(' (Czas PL)', '').strip()
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

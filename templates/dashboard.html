@@ -11,7 +11,7 @@
                 <th class="col-name" style="text-align: left;">GRACZ</th>
                 <th class="col-points" style="text-align: center;">PKT</th>
                 {% for m in last_matches %}
-                    <th class="col-match" style="text-align: center; max-width: 60px; padding: 2px 4px !important;">
+                    <th class="col-match" style="text-align: center; max-width: 45px; padding: 2px !important;">
                         <div style="white-space: nowrap; font-size: 0.7rem; overflow: hidden; text-overflow: ellipsis;">{{ m.team1 }}-{{ m.team2 }}</div>
                         <span style="font-weight: normal; font-size: 0.7rem;">{{ m.result_1 if m.played else '-' }}:{{ m.result_2 if m.played else '-' }}</span>
                     </th>
@@ -87,6 +87,11 @@
             
             <div class="match-card {{ status_class }}" id="match-{{ m.id }}">
                 <div class="match-date">{{ m.date_time_str }}</div>
+                {% if not m.played and m.start_time %}
+                    <div class="countdown" data-start="{{ m.start_time.timestamp() }}" style="font-size: 0.75rem; color: var(--accent); text-align: center; margin-bottom: 5px; font-weight: bold;">
+                        Ładowanie czasu...
+                    </div>
+                {% endif %}
                 
                 <div class="teams">
                     <div class="team">
@@ -144,7 +149,7 @@
                         <div style="display: flex; flex-direction: column; gap: 2px;">
                         {% for op in others %}
                             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 4px;">
-                                <span>{{ op.name }}</span>
+                                <span>{{ op.name }} <span style="font-size: 0.65rem; color: #777; margin-left: 5px;">{{ op.time }}</span></span>
                                 <span style="font-weight: bold; color: {% if m.played and op.pts == 10 %}var(--success){% elif m.played and op.pts == 2 %}var(--warning){% elif m.played %}var(--danger){% else %}white{% endif %};">
                                     {% if op.p1 is not none %}{{ op.p1 }}:{{ op.p2 }}{% else %}-{% endif %}
                                 </span>
@@ -164,34 +169,83 @@
 async function savePrediction(e, matchId) {
     e.preventDefault();
     const btn = document.getElementById('btn-' + matchId);
-    const p1 = document.getElementById('pred1-' + matchId).value;
-    const p2 = document.getElementById('pred2-' + matchId).value;
     
-    btn.textContent = 'Zapisywanie...';
-    btn.style.backgroundColor = 'var(--accent-hover)';
+    const pred1 = document.getElementById('pred1-' + matchId).value;
+    const pred2 = document.getElementById('pred2-' + matchId).value;
     
-    try {
-        const res = await fetch('/save_prediction', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ match_id: matchId, pred_1: p1, pred_2: p2 })
-        });
-        const data = await res.json();
-        if (data.success) {
-            btn.textContent = 'Zapisano! ✅';
-            btn.style.backgroundColor = 'var(--success)';
+    if (pred1 === '' || pred2 === '') {
+        alert('Podaj oba wyniki!');
+        btn.innerHTML = 'Zapisz typ';
+        btn.style.opacity = '1';
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('match_id', matchId);
+    formData.append('pred_1', pred1);
+    formData.append('pred_2', pred2);
+    
+    fetch("{{ url_for('save_prediction') }}", {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === 'success') {
+            btn.innerHTML = '✅ Zapisano';
+            btn.style.background = 'var(--success)';
+            btn.style.opacity = '1';
             setTimeout(() => {
-                btn.textContent = 'Zapisz typ';
-                btn.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                btn.innerHTML = 'Zapisz typ';
+                btn.style.background = 'var(--accent)';
             }, 2000);
         } else {
-            alert(data.error || 'Błąd zapisu');
-            btn.textContent = 'Zapisz typ';
+            alert(data.message);
+            btn.innerHTML = 'Zapisz typ';
+            btn.style.opacity = '1';
         }
-    } catch(err) {
-        alert('Błąd połączenia');
-        btn.textContent = 'Zapisz typ';
-    }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Wystąpił błąd.');
+        btn.innerHTML = 'Zapisz typ';
+        btn.style.opacity = '1';
+    });
 }
+
+function updateCountdowns() {
+    const now = Math.floor(Date.now() / 1000);
+    document.querySelectorAll('.countdown').forEach(el => {
+        const startStr = el.getAttribute('data-start');
+        if (!startStr) return;
+        
+        // Parse float because Python's timestamp() can return a float
+        const start = Math.floor(parseFloat(startStr));
+        const diff = start - now;
+        
+        if (diff <= 0) {
+            el.innerHTML = "Mecz trwa / zakończony - zakłady zamknięte!";
+            el.style.color = "var(--danger)";
+        } else {
+            const d = Math.floor(diff / 86400);
+            const h = Math.floor((diff % 86400) / 3600);
+            const m = Math.floor((diff % 3600) / 60);
+            const s = diff % 60;
+            
+            const hh = h.toString().padStart(2, '0');
+            const mm = m.toString().padStart(2, '0');
+            const ss = s.toString().padStart(2, '0');
+            
+            if (d > 0) {
+                el.innerHTML = `Do końca przyjmowania zakładów: ${d}d ${hh}:${mm}:${ss}`;
+            } else {
+                el.innerHTML = `Do końca przyjmowania zakładów: ${hh}:${mm}:${ss}`;
+            }
+        }
+    });
+}
+
+setInterval(updateCountdowns, 1000);
+updateCountdowns();
 </script>
 {% endblock %}

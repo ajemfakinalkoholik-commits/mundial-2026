@@ -281,7 +281,7 @@ body {
 .col-match { padding: 10px 2px; font-size: 0.65rem; color: var(--text-secondary); text-align: center; }
 .col-name-val { font-weight: bold; font-size: 0.9rem; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 10px 5px !important; }
 .col-points-val { text-align: center; font-size: 1.2rem !important; color: var(--accent); font-weight: bold; padding: 10px 5px !important; }
-.col-match-val { text-align: center; padding: 10px 2px !important; }
+.col-match-val { text-align: center; padding: 10px 2px !important; max-width: 45px; }
 .pred-score { font-weight: bold; margin-bottom: 3px; font-size: 0.8rem; }
 .pred-points { display: inline-block; padding: 2px 5px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; }
 .pred-none { color: #555; font-size: 0.7rem; }
@@ -302,7 +302,7 @@ body {
 .compact-table th, .compact-table td { padding: 4px 8px !important; font-size: 0.8rem !important; }
 .compact-table .col-name-val { font-size: 0.85rem !important; padding: 4px !important; }
 .compact-table .col-points-val { font-size: 1rem !important; padding: 4px !important; }
-.compact-table .col-match-val { padding: 4px !important; }
+.compact-table .col-match-val { padding: 4px !important; text-align: center !important; max-width: 45px !important; }
 .compact-table .pred-score { font-size: 0.8rem !important; margin-bottom: 0px !important; }
 .compact-table .pred-points { font-size: 0.65rem !important; padding: 1px 3px !important; }
 .compact-table th .col-match > div { font-size: 0.75rem !important; }
