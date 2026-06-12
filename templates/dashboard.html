@@ -191,7 +191,7 @@ async function savePrediction(e, matchId) {
     })
     .then(response => response.json())
     .then(data => {
-        if(data.status === 'success') {
+        if(data.success) {
             btn.innerHTML = '✅ Zapisano';
             btn.style.background = 'var(--success)';
             btn.style.opacity = '1';
@@ -200,7 +200,7 @@ async function savePrediction(e, matchId) {
                 btn.style.background = 'var(--accent)';
             }, 2000);
         } else {
-            alert(data.message);
+            alert(data.error || 'Wystąpił błąd');
             btn.innerHTML = 'Zapisz typ';
             btn.style.opacity = '1';
         }
