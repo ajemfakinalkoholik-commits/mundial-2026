@@ -33,7 +33,7 @@
         <th style="padding: 15px;">Akcja</th>
     </tr>
     {% for m in matches %}
-    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center;">
+    <tr id="match-{{ m.id }}" style="border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center;">
         <form method="POST">
             <input type="hidden" name="match_id" value="{{ m.id }}">
             <td style="padding: 15px; color: var(--text-secondary);">{{ m.group_name }}</td>

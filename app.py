@@ -282,7 +282,7 @@ def admin():
             # Recalculate points for this match
             calculate_points(match.id)
             flash('Zapisano wynik!', 'success')
-            
+            return redirect(url_for('admin') + f'#match-{match.id}')
     matches = Match.query.order_by(Match.start_time).all()
     all_users = User.query.order_by(User.name).all()
     return render_template('admin.html', matches=matches, all_users=all_users)
