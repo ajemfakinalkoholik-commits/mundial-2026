@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 40px;">
+    <h1>Tabela Typerów na Żywo</h1>
+    <p style="color: var(--text-secondary);">Kto stawia kolejkę, a kto wygrywa pule?</p>
+</div>
+
+<div style="overflow-x: auto; padding-bottom: 20px;">
+    <table class="leaderboard-table">
+        <thead>
+            <tr style="background: transparent; box-shadow: none;">
+                <th class="col-rank">MSC</th>
+                <th class="col-name" style="text-align: left;">GRACZ</th>
+                <th class="col-points" style="text-align: center;">PKT</th>
+                {% for m in last_matches %}
+                    <th class="col-match">
+                        <div style="white-space: nowrap;">{{ m.team1 }} - {{ m.team2 }}</div>
+                        <span style="font-weight: normal;">{{ m.result_1 if m.played else '-' }}:{{ m.result_2 if m.played else '-' }}</span>
+                    </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in leaderboard %}
+            <tr class="rank-{{ loop.index }}">
+                <td style="text-align: center;">
+                    {% if loop.index == 1 %}🥇
+                    {% elif loop.index == 2 %}🥈
+                    {% elif loop.index == 3 %}🥉
+                    {% else %}{{ loop.index }}
+                    {% endif %}
+                </td>
+                <td class="col-name-val">{{ user.name }}</td>
+                <td class="col-points-val">{{ user.points }}</td>
+                
+                {% for pred in user.recent %}
+                    <td class="col-match-val">
+                        {% if pred and pred.pred_1 is not none %}
+                            <div class="pred-score">{{ pred.pred_1 }}:{{ pred.pred_2 }}</div>
+                            <span class="pred-points" style="
+                                background: {% if pred.points == 10 %}var(--success){% elif pred.points == 2 %}var(--warning){% elif last_matches[loop.index0].played %}var(--danger){% else %}rgba(255,255,255,0.1){% endif %};
+                                color: {% if pred.points > 0 or last_matches[loop.index0].played %}#000{% else %}white{% endif %};
+                            ">
+                                {% if last_matches[loop.index0].played %}+{{ pred.points }}{% else %}-{% endif %}
+                            </span>
+                        {% else %}
+                            <span class="pred-none">Brak</span>
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

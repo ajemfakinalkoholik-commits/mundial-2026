@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 50px auto; text-align: center;">
+    <h2>Kto wchodzi do gry?</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 30px;">Wybierz swój profil, aby się zalogować.</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 20px; padding: 20px;">
+        {% for u in users %}
+        <div 
+            class="user-tile" 
+            onclick="selectUser('{{ u.name }}', {{ 'true' if u.is_admin else 'false' }})"
+            style="background: var(--panel-bg); border: 2px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 20px 10px; cursor: pointer; transition: all 0.2s;"
+            onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-5px)'"
+            onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='none'"
+        >
+            <div style="font-size: 3rem; margin-bottom: 10px;">
+                {% if u.is_admin %}👑{% else %}👤{% endif %}
+            </div>
+            <div style="font-weight: bold; font-size: 1.1rem;">{{ u.name }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Hidden Form -->
+    <form id="login-form" method="POST" action="{{ url_for('login') }}" style="display: none;">
+        <input type="hidden" name="user_name" id="form-user-name">
+        <input type="hidden" name="password" id="form-password">
+    </form>
+</div>
+
+<script>
+function selectUser(name, isAdmin) {
+    if (isAdmin) {
+        let pwd = prompt("Witaj Kamil. Podaj hasło administratora:");
+        if (pwd === null) return; // User cancelled
+        document.getElementById('form-password').value = pwd;
+    }
+    document.getElementById('form-user-name').value = name;
+    document.getElementById('login-form').submit();
+}
+</script>
+{% endblock %}
