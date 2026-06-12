@@ -259,10 +259,15 @@ def export_csv():
 @app.route('/save_prediction', methods=['POST'])
 @login_required
 def save_prediction():
-    data = request.get_json()
-    match_id = data.get('match_id')
-    pred_1 = data.get('pred_1')
-    pred_2 = data.get('pred_2')
+    if request.is_json:
+        data = request.get_json()
+        match_id = data.get('match_id')
+        pred_1 = data.get('pred_1')
+        pred_2 = data.get('pred_2')
+    else:
+        match_id = request.form.get('match_id')
+        pred_1 = request.form.get('pred_1')
+        pred_2 = request.form.get('pred_2')
     
     match = db.session.get(Match, match_id)
     if not match:
