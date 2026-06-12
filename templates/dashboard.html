@@ -6,9 +6,58 @@
     <p style="color: var(--text-secondary);">Wytypuj wyniki nadchodzących spotkań.</p>
 </div>
 
-<div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 30px;">
+<div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
     <a href="{{ url_for('dashboard', sort='group') }}" style="padding: 8px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; background: {% if request.args.get('sort', 'group') == 'group' %}var(--accent){% else %}rgba(255,255,255,0.1){% endif %}; color: white; transition: 0.2s;">Po Grupie</a>
     <a href="{{ url_for('dashboard', sort='date') }}" style="padding: 8px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; background: {% if request.args.get('sort') == 'date' %}var(--accent){% else %}rgba(255,255,255,0.1){% endif %}; color: white; transition: 0.2s;">Po Dacie</a>
+</div>
+
+<div style="overflow-x: auto; padding-bottom: 20px; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+    <table class="leaderboard-table" style="margin-top: 0;">
+        <thead>
+            <tr style="background: transparent; box-shadow: none;">
+                <th class="col-rank">MSC</th>
+                <th class="col-name" style="text-align: left;">GRACZ</th>
+                <th class="col-points" style="text-align: center;">PKT</th>
+                {% for m in last_matches %}
+                    <th class="col-match">
+                        <div style="white-space: nowrap;">{{ m.team1 }} - {{ m.team2 }}</div>
+                        <span style="font-weight: normal;">{{ m.result_1 if m.played else '-' }}:{{ m.result_2 if m.played else '-' }}</span>
+                    </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in leaderboard %}
+            <tr class="rank-{{ loop.index }}">
+                <td style="text-align: center;">
+                    {% if loop.index == 1 %}🥇
+                    {% elif loop.index == 2 %}🥈
+                    {% elif loop.index == 3 %}🥉
+                    {% else %}{{ loop.index }}
+                    {% endif %}
+                </td>
+                <td class="col-name-val">{{ user.name }}</td>
+                <td class="col-points-val">{{ user.points }}</td>
+                
+                {% for pred in user.recent %}
+                    <td class="col-match-val">
+                        {% if pred and pred.pred_1 is not none %}
+                            <div class="pred-score">{{ pred.pred_1 }}:{{ pred.pred_2 }}</div>
+                            <span class="pred-points" style="
+                                background: {% if pred.points == 10 %}var(--success){% elif pred.points == 2 %}var(--warning){% elif last_matches[loop.index0].played %}var(--danger){% else %}rgba(255,255,255,0.1){% endif %};
+                                color: {% if pred.points > 0 or last_matches[loop.index0].played %}#000{% else %}white{% endif %};
+                            ">
+                                {% if last_matches[loop.index0].played %}+{{ pred.points }}{% else %}-{% endif %}
+                            </span>
+                        {% else %}
+                            <span class="pred-none">Brak</span>
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 {% for group_name, match_list in grouped.items() %}
@@ -64,14 +113,23 @@
                 </form>
                 
                 {% else %}
-                <div style="text-align: center; margin-top: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
-                    <span style="color: var(--text-secondary); font-size: 0.9rem;">Twój typ: </span>
-                    <strong style="font-size: 1.1rem;">
-                        {% if pred and pred.pred_1 is not none %}{{ pred.pred_1 }} : {{ pred.pred_2 }}{% else %}Brak{% endif %}
-                    </strong>
-                    <div style="margin-top: 5px; font-weight: bold; color: {% if pred and pred.points == 10 %}var(--success){% elif pred and pred.points == 2 %}var(--warning){% elif m.played %}var(--danger){% else %}var(--text-secondary){% endif %}">
-                        {% if m.played %}+{{ pred.points if pred else 0 }} pkt{% else %}Oczekuje na wynik oficjalny...{% endif %}
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+                    <div style="text-align: left; flex: 1;">
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;">Twój typ: </span>
+                        <strong style="font-size: 1.1rem;">
+                            {% if pred and pred.pred_1 is not none %}{{ pred.pred_1 }} : {{ pred.pred_2 }}{% else %}Brak{% endif %}
+                        </strong>
+                        <div style="margin-top: 5px; font-weight: bold; color: {% if pred and pred.points == 10 %}var(--success){% elif pred and pred.points == 2 %}var(--warning){% elif m.played %}var(--danger){% else %}var(--text-secondary){% endif %}">
+                            {% if m.played %}+{{ pred.points if pred else 0 }} pkt{% else %}Oczekuje na wynik oficjalny...{% endif %}
+                        </div>
                     </div>
+                    {% if m.highlights_url %}
+                    <div style="margin-left: 15px;">
+                        <a href="{{ m.highlights_url }}" target="_blank" style="display: inline-block; padding: 10px 15px; background: #e62117; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 0.9rem; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                            🎬 Obejrzyj Skrót
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
                 {% endif %}
                 

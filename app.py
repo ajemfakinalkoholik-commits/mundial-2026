@@ -68,6 +68,7 @@ class Match(db.Model):
     result_1 = db.Column(db.Integer, nullable=True)
     result_2 = db.Column(db.Integer, nullable=True)
     played = db.Column(db.Boolean, default=False)
+    highlights_url = db.Column(db.String(255), nullable=True)
     predictions = db.relationship('Prediction', backref='match', lazy=True)
 
 class Prediction(db.Model):
@@ -147,7 +148,25 @@ def dashboard():
                 grouped[m.group_name] = []
             grouped[m.group_name].append(m)
             
+    # Data for the leaderboard
+    users = User.query.all()
+    finished = Match.query.filter_by(played=True).order_by(Match.start_time.desc()).limit(2).all()
+    finished.reverse()
+    upcoming = Match.query.filter_by(played=False).order_by(Match.start_time.asc()).limit(2).all()
+    target_matches = finished + upcoming
+    
     all_predictions = Prediction.query.all()
+    
+    leaderboard_data = []
+    for u in users:
+        u_preds = [p for p in all_predictions if p.user_id == u.id]
+        pts = sum(p.points for p in u_preds)
+        recent_forms = []
+        for m in target_matches:
+            m_pred = next((p for p in u_preds if p.match_id == m.id), None)
+            recent_forms.append(m_pred)
+        leaderboard_data.append({'name': u.name, 'points': pts, 'recent': recent_forms})
+    leaderboard_data.sort(key=lambda x: x['points'], reverse=True)
     
     # Dictionary for current user predictions
     pred_dict = {p.match_id: p for p in all_predictions if p.user_id == current_user.id}
@@ -166,7 +185,7 @@ def dashboard():
                 'time': p.updated_at.strftime('%d.%m %H:%M') if p.updated_at else ''
             })
             
-    return render_template('dashboard.html', grouped=grouped, pred_dict=pred_dict, others_dict=others_dict, now=datetime.now())
+    return render_template('dashboard.html', grouped=grouped, pred_dict=pred_dict, others_dict=others_dict, now=datetime.now(), leaderboard=leaderboard_data, last_matches=target_matches)
 
 @app.route('/save_prediction', methods=['POST'])
 @login_required
@@ -210,10 +229,14 @@ def save_prediction():
 def leaderboard():
     users = User.query.all()
     
-    # Get last 5 matches that have started
-    last_5_matches = Match.query.filter(Match.start_time <= datetime.now()).order_by(Match.start_time.desc()).limit(5).all()
-    # Zostawiamy order_by(desc), aby pokazywac od najnowszego do najstarszego
-    # last_5_matches.reverse()
+    # Get 2 most recently finished matches
+    finished = Match.query.filter_by(played=True).order_by(Match.start_time.desc()).limit(2).all()
+    finished.reverse() # chronological order
+    
+    # Get 2 next upcoming matches
+    upcoming = Match.query.filter_by(played=False).order_by(Match.start_time.asc()).limit(2).all()
+    
+    target_matches = finished + upcoming
     
     all_predictions = Prediction.query.all()
     
@@ -222,16 +245,16 @@ def leaderboard():
         u_preds = [p for p in all_predictions if p.user_id == u.id]
         pts = sum(p.points for p in u_preds)
         
-        # Collect recent forms (points for last 5 matches)
+        # Collect forms for the target matches
         recent_forms = []
-        for m in last_5_matches:
+        for m in target_matches:
             m_pred = next((p for p in u_preds if p.match_id == m.id), None)
             recent_forms.append(m_pred)
             
         leaderboard_data.append({'name': u.name, 'points': pts, 'recent': recent_forms})
         
     leaderboard_data.sort(key=lambda x: x['points'], reverse=True)
-    return render_template('leaderboard.html', leaderboard=leaderboard_data, last_matches=last_5_matches)
+    return render_template('leaderboard.html', leaderboard=leaderboard_data, last_matches=target_matches)
 
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
@@ -256,6 +279,7 @@ def admin():
         res_2 = request.form.get('res_2')
         
         new_date = request.form.get('new_date')
+        highlights_url = request.form.get('highlights_url')
         
         match = db.session.get(Match, match_id)
         if match:
@@ -276,6 +300,9 @@ def admin():
                     match.date_time_str = f"{st.strftime('%Y-%m-%d')} | {st.strftime('%H:%M')} (Edytowane)"
                 except Exception:
                     pass
+            
+            if highlights_url is not None:
+                match.highlights_url = highlights_url.strip() if highlights_url.strip() else None
                     
             db.session.commit()
             
@@ -315,7 +342,16 @@ def calculate_points(match_id):
             
     db.session.commit()
 
+with app.app_context():
+    # Bezpieczna migracja - dodanie kolumny na skróty wideo
+    from sqlalchemy import text
+    try:
+        db.session.execute(text("ALTER TABLE typer_matches ADD COLUMN highlights_url VARCHAR(255)"))
+        db.session.commit()
+        print("Pomyślnie dodano kolumnę highlights_url do bazy.")
+    except Exception as e:
+        # Kolumna już istnieje lub inny błąd, ignorujemy
+        db.session.rollback()
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True, port=5000)
