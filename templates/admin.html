@@ -4,6 +4,12 @@
 <div style="text-align: center; margin-bottom: 40px;">
     <h1>Pulpit Administratora</h1>
     <p style="color: var(--text-secondary);">Wpisz oficjalne wyniki meczów. System automatycznie przeliczy punkty wszystkim graczom.</p>
+    
+    <div style="margin-top: 20px;">
+        <a href="{{ url_for('export_csv') }}" style="display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+            📊 Pobierz Logi Zakładów (CSV)
+        </a>
+    </div>
 </div>
 
 <div style="margin-bottom: 40px; background: var(--panel-bg); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">

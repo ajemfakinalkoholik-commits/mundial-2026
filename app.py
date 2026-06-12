@@ -1,9 +1,13 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+
+def pl_now():
+    # Czas w Polsce (CEST = UTC+2 latem, UTC+1 zima). Zakładamy czas letni dla Mundialu 2026.
+    return datetime.utcnow() + timedelta(hours=2)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'twoj-sekretny-klucz-tutaj'
@@ -79,7 +83,7 @@ class Prediction(db.Model):
     pred_1 = db.Column(db.Integer, nullable=True)
     pred_2 = db.Column(db.Integer, nullable=True)
     points = db.Column(db.Integer, default=0)
-    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+    updated_at = db.Column(db.DateTime, default=pl_now)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -208,7 +212,49 @@ def dashboard():
                 'time': p.updated_at.strftime('%d.%m %H:%M') if p.updated_at else ''
             })
             
-    return render_template('dashboard.html', grouped=grouped, pred_dict=pred_dict, others_dict=others_dict, now=datetime.now(), leaderboard=leaderboard_data, last_matches=target_matches, filter_val=filter_val, sort_by=sort_by)
+    return render_template('dashboard.html', grouped=grouped, pred_dict=pred_dict, others_dict=others_dict, now=pl_now(), leaderboard=leaderboard_data, last_matches=target_matches, filter_val=filter_val, sort_by=sort_by)
+
+@app.route('/fix_times')
+@login_required
+def fix_times():
+    if not current_user.is_admin:
+        return "Brak uprawnień"
+    
+    predictions = Prediction.query.all()
+    for p in predictions:
+        if p.updated_at:
+            p.updated_at = p.updated_at + timedelta(hours=2)
+    db.session.commit()
+    return "Poprawiono czasy wszystkich zakładów o +2 godziny!"
+
+import csv
+from io import StringIO
+from flask import Response
+
+@app.route('/export_csv')
+@login_required
+def export_csv():
+    if not current_user.is_admin:
+        return "Brak uprawnień", 403
+        
+    si = StringIO()
+    cw = csv.writer(si)
+    cw.writerow(['Gracz', 'Mecz', 'Czas rozpoczecia', 'Typ_1', 'Typ_2', 'Data i godzina typu', 'Punkty'])
+    
+    predictions = Prediction.query.join(User).join(Match).order_by(Match.start_time.desc(), User.name).all()
+    for p in predictions:
+        match_str = f"{p.match.team1}-{p.match.team2}"
+        start_time = p.match.start_time.strftime('%Y-%m-%d %H:%M') if p.match.start_time else 'Brak'
+        p1 = p.pred_1 if p.pred_1 is not None else '-'
+        p2 = p.pred_2 if p.pred_2 is not None else '-'
+        up_time = p.updated_at.strftime('%Y-%m-%d %H:%M:%S') if p.updated_at else 'Brak'
+        
+        cw.writerow([p.user.name, match_str, start_time, p1, p2, up_time, p.points])
+        
+    output = make_response(si.getvalue())
+    output.headers["Content-Disposition"] = "attachment; filename=typy_logi.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
 
 @app.route('/save_prediction', methods=['POST'])
 @login_required
@@ -225,7 +271,7 @@ def save_prediction():
     if match.played:
         return jsonify({'error': 'Ten mecz już się odbył.'}), 400
         
-    if match.start_time and datetime.now() >= match.start_time:
+    if match.start_time and pl_now() >= match.start_time:
         return jsonify({'error': 'Czas na obstawianie tego meczu minął!'}), 400
         
     pred = Prediction.query.filter_by(user_id=current_user.id, match_id=match_id).first()
@@ -240,7 +286,7 @@ def save_prediction():
         else:
             pred.pred_1 = int(pred_1)
             pred.pred_2 = int(pred_2)
-        pred.updated_at = datetime.now()
+        pred.updated_at = pl_now()
         db.session.commit()
         return jsonify({'success': True})
     except Exception as e:
