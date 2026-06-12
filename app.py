@@ -128,12 +128,25 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    matches = Match.query.order_by(Match.group_name, Match.start_time).all()
-    # Group matches by group_name
-    grouped = {}
-    for m in matches:
-        grouped.setdefault(m.group_name, []).append(m)
-        
+    sort_by = request.args.get('sort', 'group')
+    
+    if sort_by == 'date':
+        matches = Match.query.order_by(Match.start_time).all()
+        grouped = {}
+        for m in matches:
+            # Extract date from date_time_str (e.g. "11 czerwca 2026 | 21:00")
+            date_key = m.date_time_str.split('|')[0].strip() if '|' in m.date_time_str else "Inne"
+            if date_key not in grouped:
+                grouped[date_key] = []
+            grouped[date_key].append(m)
+    else:
+        matches = Match.query.order_by(Match.group_name, Match.start_time).all()
+        grouped = {}
+        for m in matches:
+            if m.group_name not in grouped:
+                grouped[m.group_name] = []
+            grouped[m.group_name].append(m)
+            
     all_predictions = Prediction.query.all()
     
     # Dictionary for current user predictions
