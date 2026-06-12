@@ -134,7 +134,7 @@ body {
 .match-card {
   background: var(--panel-bg);
   border-radius: 12px;
-  padding: 20px;
+  padding: 10px 15px;
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: transform 0.2s, box-shadow 0.2s;
   display: flex;

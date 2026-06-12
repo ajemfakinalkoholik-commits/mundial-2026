@@ -13,7 +13,6 @@
         {% if current_user.is_authenticated %}
         <div class="navbar-links">
             <a href="{{ url_for('dashboard') }}">Pulpit</a>
-            <a href="{{ url_for('leaderboard') }}">Tabela</a>
             {% if current_user.is_admin %}
             <a href="{{ url_for('admin') }}">Admin</a>
             {% endif %}

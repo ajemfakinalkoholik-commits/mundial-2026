@@ -11,9 +11,9 @@
                 <th class="col-name" style="text-align: left;">GRACZ</th>
                 <th class="col-points" style="text-align: center;">PKT</th>
                 {% for m in last_matches %}
-                    <th class="col-match">
-                        <div style="white-space: nowrap;">{{ m.team1 }} - {{ m.team2 }}</div>
-                        <span style="font-weight: normal;">{{ m.result_1 if m.played else '-' }}:{{ m.result_2 if m.played else '-' }}</span>
+                    <th class="col-match" style="text-align: center; max-width: 60px; padding: 2px 4px !important;">
+                        <div style="white-space: nowrap; font-size: 0.7rem; overflow: hidden; text-overflow: ellipsis;">{{ m.team1 }}-{{ m.team2 }}</div>
+                        <span style="font-weight: normal; font-size: 0.7rem;">{{ m.result_1 if m.played else '-' }}:{{ m.result_2 if m.played else '-' }}</span>
                     </th>
                 {% endfor %}
             </tr>
@@ -52,9 +52,16 @@
     </table>
 </div>
 
-<div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 30px;">
-    <a href="{{ url_for('dashboard', sort='group') }}" style="padding: 8px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; background: {% if request.args.get('sort', 'group') == 'group' %}var(--accent){% else %}rgba(255,255,255,0.1){% endif %}; color: white; transition: 0.2s;">Po Grupie</a>
-    <a href="{{ url_for('dashboard', sort='date') }}" style="padding: 8px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; background: {% if request.args.get('sort') == 'date' %}var(--accent){% else %}rgba(255,255,255,0.1){% endif %}; color: white; transition: 0.2s;">Po Dacie</a>
+<div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+    <div style="display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 20px;">
+        <a href="{{ url_for('dashboard', sort=sort_by, filter='all') }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if filter_val == 'all' %}var(--accent){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Wszystkie</a>
+        <a href="{{ url_for('dashboard', sort=sort_by, filter='upcoming') }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if filter_val == 'upcoming' %}var(--accent){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Nadchodzące</a>
+        <a href="{{ url_for('dashboard', sort=sort_by, filter='unpredicted') }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if filter_val == 'unpredicted' %}var(--accent){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Do obstawienia</a>
+    </div>
+    <div style="display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 20px;">
+        <a href="{{ url_for('dashboard', sort='group', filter=filter_val) }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if sort_by == 'group' %}var(--success){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Grupy</a>
+        <a href="{{ url_for('dashboard', sort='date', filter=filter_val) }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if sort_by == 'date' %}var(--success){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Daty</a>
+    </div>
 </div>
 
 {% for group_name, match_list in grouped.items() %}
@@ -131,16 +138,15 @@
                 {% endif %}
                 
                 <!-- Others' bets -->
-                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
-                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px; text-align: center;">Typy pozostałych graczy:</div>
+                <div style="margin-top: 5px; padding-top: 5px;">
                     {% set others = others_dict.get(m.id, []) %}
                     {% if others %}
-                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <div style="display: flex; flex-direction: column; gap: 2px;">
                         {% for op in others %}
-                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; background: rgba(0,0,0,0.2); padding: 5px 10px; border-radius: 4px;">
-                                <span>{{ op.name }} <span style="font-size: 0.7rem; color: #777; margin-left: 5px;">{{ op.time }}</span></span>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 4px;">
+                                <span>{{ op.name }}</span>
                                 <span style="font-weight: bold; color: {% if m.played and op.pts == 10 %}var(--success){% elif m.played and op.pts == 2 %}var(--warning){% elif m.played %}var(--danger){% else %}white{% endif %};">
-                                    {% if op.p1 is not none %}{{ op.p1 }} : {{ op.p2 }}{% else %}Brak{% endif %}
+                                    {% if op.p1 is not none %}{{ op.p1 }}:{{ op.p2 }}{% else %}-{% endif %}
                                 </span>
                             </div>
                         {% endfor %}

@@ -130,23 +130,46 @@ def logout():
 @login_required
 def dashboard():
     sort_by = request.args.get('sort', 'group')
+    filter_val = request.args.get('filter', 'all')
+    
+    # Base query for matches
+    matches_query = Match.query
+    
+    if filter_val == 'upcoming':
+        matches_query = matches_query.filter_by(played=False)
+    elif filter_val == 'unpredicted':
+        matches_query = matches_query.filter_by(played=False)
+        # We will filter out predicted ones in Python since it's easier without a complex join right now
     
     if sort_by == 'date':
-        matches = Match.query.order_by(Match.start_time).all()
+        matches = matches_query.order_by(Match.start_time).all()
         grouped = {}
         for m in matches:
-            # Extract date from date_time_str (e.g. "11 czerwca 2026 | 21:00")
             date_key = m.date_time_str.split('|')[0].strip() if '|' in m.date_time_str else "Inne"
             if date_key not in grouped:
                 grouped[date_key] = []
             grouped[date_key].append(m)
     else:
-        matches = Match.query.order_by(Match.group_name, Match.start_time).all()
+        matches = matches_query.order_by(Match.group_name, Match.start_time).all()
         grouped = {}
         for m in matches:
             if m.group_name not in grouped:
                 grouped[m.group_name] = []
             grouped[m.group_name].append(m)
+            
+    all_predictions = Prediction.query.all()
+    
+    # Dictionary for current user predictions
+    pred_dict = {p.match_id: p for p in all_predictions if p.user_id == current_user.id}
+    
+    # Apply 'unpredicted' filter by removing matches the user has already predicted
+    if filter_val == 'unpredicted':
+        new_grouped = {}
+        for g_name, m_list in grouped.items():
+            filtered_list = [m for m in m_list if m.id not in pred_dict or pred_dict[m.id].pred_1 is None]
+            if filtered_list:
+                new_grouped[g_name] = filtered_list
+        grouped = new_grouped
             
     # Data for the leaderboard
     users = User.query.all()
@@ -185,7 +208,7 @@ def dashboard():
                 'time': p.updated_at.strftime('%d.%m %H:%M') if p.updated_at else ''
             })
             
-    return render_template('dashboard.html', grouped=grouped, pred_dict=pred_dict, others_dict=others_dict, now=datetime.now(), leaderboard=leaderboard_data, last_matches=target_matches)
+    return render_template('dashboard.html', grouped=grouped, pred_dict=pred_dict, others_dict=others_dict, now=datetime.now(), leaderboard=leaderboard_data, last_matches=target_matches, filter_val=filter_val, sort_by=sort_by)
 
 @app.route('/save_prediction', methods=['POST'])
 @login_required
@@ -297,7 +320,7 @@ def admin():
                     # Format z przeglądarki: YYYY-MM-DDTHH:MM
                     st = datetime.strptime(new_date, "%Y-%m-%dT%H:%M")
                     match.start_time = st
-                    match.date_time_str = f"{st.strftime('%Y-%m-%d')} | {st.strftime('%H:%M')} (Edytowane)"
+                    match.date_time_str = f"{st.strftime('%Y-%m-%d')} | {st.strftime('%H:%M')}"
                 except Exception:
                     pass
             
