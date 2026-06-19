@@ -500,6 +500,14 @@ def calculate_points(match_id):
 
 with app.app_context():
     db.create_all()
+    
+    # Tworzenie tymczasowego admina dla pustej bazy (np. na Supabase)
+    if User.query.count() == 0:
+        setup_admin = User(email="admin@setup.com", name="Admin_Setup", is_admin=True)
+        db.session.add(setup_admin)
+        db.session.commit()
+        print("Utworzono tymczasowe konto Admin_Setup.")
+        
     # Bezpieczna migracja - dodanie kolumny na skróty wideo
     from sqlalchemy import text
     try:
