@@ -10,6 +10,7 @@
                 <th class="col-rank">MSC</th>
                 <th class="col-name" style="text-align: left;">GRACZ</th>
                 <th class="col-points" style="text-align: center;">PKT</th>
+                <th style="text-align: center; color: var(--text-secondary); font-size: 0.8rem; padding: 10px 5px;">10 | 2 | 0</th>
                 {% for m in last_matches %}
                     <th class="col-match" style="text-align: center; max-width: 45px; padding: 2px !important;">
                         <div style="white-space: nowrap; font-size: 0.7rem; overflow: hidden; text-overflow: ellipsis;">{{ m.team1 }}-{{ m.team2 }}</div>
@@ -20,16 +21,21 @@
         </thead>
         <tbody>
         {% for user in leaderboard %}
-            <tr class="rank-{{ loop.index }}">
+            <tr class="rank-{{ user.rank }}">
                 <td style="text-align: center;">
-                    {% if loop.index == 1 %}🥇
-                    {% elif loop.index == 2 %}🥈
-                    {% elif loop.index == 3 %}🥉
-                    {% else %}{{ loop.index }}
+                    {% if user.rank == 1 %}🥇
+                    {% elif user.rank == 2 %}🥈
+                    {% elif user.rank == 3 %}🥉
+                    {% else %}{{ user.rank }}
                     {% endif %}
                 </td>
                 <td class="col-name-val">{{ user.name }}</td>
                 <td class="col-points-val">{{ user.points }}</td>
+                <td style="text-align: center; font-size: 0.8rem; color: var(--text-secondary); padding: 5px;">
+                    <span style="color: var(--success);">{{ user.c_10 }}</span> | 
+                    <span style="color: var(--warning);">{{ user.c_2 }}</span> | 
+                    <span style="color: rgba(255,255,255,0.3);">{{ user.c_0 }}</span>
+                </td>
                 
                 {% for pred in user.recent %}
                     <td class="col-match-val">

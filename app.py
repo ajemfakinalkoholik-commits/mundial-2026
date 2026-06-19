@@ -200,16 +200,42 @@ def dashboard():
     
     all_predictions = Prediction.query.all()
     
+    played_match_ids = {m.id for m in Match.query.filter_by(played=True).all()}
+    
     leaderboard_data = []
     for u in users:
         u_preds = [p for p in all_predictions if p.user_id == u.id]
         pts = sum(p.points for p in u_preds)
+        
+        c_10 = sum(1 for p in u_preds if p.points == 10)
+        c_2 = sum(1 for p in u_preds if p.points == 2)
+        c_0 = sum(1 for p in u_preds if p.points == 0 and p.match_id in played_match_ids)
+        
         recent_forms = []
         for m in target_matches:
             m_pred = next((p for p in u_preds if p.match_id == m.id), None)
             recent_forms.append(m_pred)
-        leaderboard_data.append({'name': u.name, 'points': pts, 'recent': recent_forms})
-    leaderboard_data.sort(key=lambda x: x['points'], reverse=True)
+            
+        leaderboard_data.append({
+            'name': u.name, 
+            'points': pts, 
+            'c_10': c_10,
+            'c_2': c_2,
+            'c_0': c_0,
+            'recent': recent_forms
+        })
+        
+    leaderboard_data.sort(key=lambda x: (x['points'], x['c_10']), reverse=True)
+    
+    for i, user_data in enumerate(leaderboard_data):
+        if i > 0:
+            prev = leaderboard_data[i-1]
+            if user_data['points'] == prev['points'] and user_data['c_10'] == prev['c_10']:
+                user_data['rank'] = prev['rank']
+            else:
+                user_data['rank'] = i + 1
+        else:
+            user_data['rank'] = 1
     
     # Dictionary for current user predictions
     pred_dict = {p.match_id: p for p in all_predictions if p.user_id == current_user.id}
@@ -422,10 +448,16 @@ def leaderboard():
     
     all_predictions = Prediction.query.all()
     
+    played_match_ids = {m.id for m in Match.query.filter_by(played=True).all()}
+    
     leaderboard_data = []
     for u in users:
         u_preds = [p for p in all_predictions if p.user_id == u.id]
         pts = sum(p.points for p in u_preds)
+        
+        c_10 = sum(1 for p in u_preds if p.points == 10)
+        c_2 = sum(1 for p in u_preds if p.points == 2)
+        c_0 = sum(1 for p in u_preds if p.points == 0 and p.match_id in played_match_ids)
         
         # Collect forms for the target matches
         recent_forms = []
@@ -433,9 +465,25 @@ def leaderboard():
             m_pred = next((p for p in u_preds if p.match_id == m.id), None)
             recent_forms.append(m_pred)
             
-        leaderboard_data.append({'name': u.name, 'points': pts, 'recent': recent_forms})
+        leaderboard_data.append({
+            'name': u.name, 
+            'points': pts, 
+            'c_10': c_10,
+            'c_2': c_2,
+            'c_0': c_0,
+            'recent': recent_forms
+        })
         
-    leaderboard_data.sort(key=lambda x: x['points'], reverse=True)
+    leaderboard_data.sort(key=lambda x: (x['points'], x['c_10']), reverse=True)
+    for i, user_data in enumerate(leaderboard_data):
+        if i > 0:
+            prev = leaderboard_data[i-1]
+            if user_data['points'] == prev['points'] and user_data['c_10'] == prev['c_10']:
+                user_data['rank'] = prev['rank']
+            else:
+                user_data['rank'] = i + 1
+        else:
+            user_data['rank'] = 1
     return render_template('leaderboard.html', leaderboard=leaderboard_data, last_matches=target_matches)
 
 @app.route('/admin', methods=['GET', 'POST'])
