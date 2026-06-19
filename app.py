@@ -135,17 +135,8 @@ def logout():
 def dashboard():
     sort_by = request.args.get('sort', 'group')
     filter_val = request.args.get('filter', 'all')
-    phase = request.args.get('phase', 'group')
-    
     # Base query for matches
     matches_query = Match.query
-    
-    KNOCKOUT_GROUPS = ["1/16 Finału", "1/8 Finału", "Ćwierćfinały", "Półfinały", "Mecz o 3. miejsce", "Finał"]
-    
-    if phase == 'knockout':
-        matches_query = matches_query.filter(Match.group_name.in_(KNOCKOUT_GROUPS))
-    else:
-        matches_query = matches_query.filter(~Match.group_name.in_(KNOCKOUT_GROUPS))
     
     if filter_val == 'upcoming':
         matches_query = matches_query.filter_by(played=False)
@@ -157,12 +148,29 @@ def dashboard():
         matches = matches_query.order_by(Match.start_time).all()
         grouped = {}
         for m in matches:
-            date_key = m.date_time_str.split('|')[0].strip() if '|' in m.date_time_str else "Inne"
+            date_key = m.date_time_str.split('|')[0].strip() if m.date_time_str and '|' in m.date_time_str else "Inne"
             if date_key not in grouped:
                 grouped[date_key] = []
             grouped[date_key].append(m)
     else:
-        matches = matches_query.order_by(Match.group_name, Match.start_time).all()
+        matches = matches_query.all()
+        
+        def group_sort_key(m):
+            gn = m.group_name
+            if gn == "1/16 Finału": p = 1
+            elif gn == "1/8 Finału": p = 2
+            elif gn == "Ćwierćfinały": p = 3
+            elif gn == "Półfinały": p = 4
+            elif gn == "Mecz o 3. miejsce": p = 5
+            elif gn == "Finał": p = 6
+            else: p = 0
+            
+            # For start_time, use a far future date if None
+            st = m.start_time if m.start_time else datetime(2099, 1, 1)
+            return (p, gn, st)
+            
+        matches.sort(key=group_sort_key)
+        
         grouped = {}
         for m in matches:
             if m.group_name not in grouped:

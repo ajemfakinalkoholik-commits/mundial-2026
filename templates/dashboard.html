@@ -54,17 +54,13 @@
 
 <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
     <div style="display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 20px;">
-        <a href="{{ url_for('dashboard', sort=sort_by, filter='all', phase=phase) }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if filter_val == 'all' %}var(--accent){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Wszystkie</a>
-        <a href="{{ url_for('dashboard', sort=sort_by, filter='upcoming', phase=phase) }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if filter_val == 'upcoming' %}var(--accent){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Nadchodzące</a>
-        <a href="{{ url_for('dashboard', sort=sort_by, filter='unpredicted', phase=phase) }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if filter_val == 'unpredicted' %}var(--accent){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Do obstawienia</a>
+        <a href="{{ url_for('dashboard', sort=sort_by, filter='all') }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if filter_val == 'all' %}var(--accent){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Wszystkie</a>
+        <a href="{{ url_for('dashboard', sort=sort_by, filter='upcoming') }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if filter_val == 'upcoming' %}var(--accent){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Nadchodzące</a>
+        <a href="{{ url_for('dashboard', sort=sort_by, filter='unpredicted') }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if filter_val == 'unpredicted' %}var(--accent){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Do obstawienia</a>
     </div>
     <div style="display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 20px;">
-        <a href="{{ url_for('dashboard', sort='group', filter=filter_val, phase=phase) }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if sort_by == 'group' %}var(--success){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Grupy</a>
-        <a href="{{ url_for('dashboard', sort='date', filter=filter_val, phase=phase) }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if sort_by == 'date' %}var(--success){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Daty</a>
-    </div>
-    <div style="display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 20px;">
-        <a href="{{ url_for('dashboard', sort=sort_by, filter=filter_val, phase='group') }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if phase == 'group' %}#dc3545{% else %}transparent{% endif %}; color: white; transition: 0.2s;">Faza Grupowa</a>
-        <a href="{{ url_for('dashboard', sort=sort_by, filter=filter_val, phase='knockout') }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if phase == 'knockout' %}#dc3545{% else %}transparent{% endif %}; color: white; transition: 0.2s;">Faza Pucharowa</a>
+        <a href="{{ url_for('dashboard', sort='group', filter=filter_val) }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if sort_by == 'group' %}var(--success){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Grupy(Faza)</a>
+        <a href="{{ url_for('dashboard', sort='date', filter=filter_val) }}" style="padding: 5px 12px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 0.8rem; background: {% if sort_by == 'date' %}var(--success){% else %}transparent{% endif %}; color: white; transition: 0.2s;">Daty</a>
     </div>
 </div>
 
