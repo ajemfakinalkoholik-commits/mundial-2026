@@ -339,6 +339,16 @@ def import_backup():
                 db.session.add(new_p)
                 
             db.session.commit()
+            
+            # Naprawa sekwencji po ręcznym wgraniu ID (wymagane w PostgreSQL)
+            try:
+                db.session.execute(text("SELECT setval('typer_users_id_seq', COALESCE((SELECT MAX(id)+1 FROM typer_users), 1), false)"))
+                db.session.execute(text("SELECT setval('typer_matches_id_seq', COALESCE((SELECT MAX(id)+1 FROM typer_matches), 1), false)"))
+                db.session.execute(text("SELECT setval('typer_predictions_id_seq', COALESCE((SELECT MAX(id)+1 FROM typer_predictions), 1), false)"))
+                db.session.commit()
+            except Exception:
+                db.session.rollback()
+                
             flash('Baza danych pomyślnie przywrócona z kopii!', 'success')
         except Exception as e:
             db.session.rollback()
@@ -519,6 +529,16 @@ with app.app_context():
         db.session.add(setup_admin)
         db.session.commit()
         print("Utworzono tymczasowe konto Admin_Setup.")
+        
+    # Fix sequence for PostgreSQL after importing explicit IDs
+    from sqlalchemy import text
+    try:
+        db.session.execute(text("SELECT setval('typer_users_id_seq', COALESCE((SELECT MAX(id)+1 FROM typer_users), 1), false)"))
+        db.session.execute(text("SELECT setval('typer_matches_id_seq', COALESCE((SELECT MAX(id)+1 FROM typer_matches), 1), false)"))
+        db.session.execute(text("SELECT setval('typer_predictions_id_seq', COALESCE((SELECT MAX(id)+1 FROM typer_predictions), 1), false)"))
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
         
     # Inicjalizacja fazy pucharowej
     if Match.query.filter_by(group_name='1/16 Finału').count() == 0:
