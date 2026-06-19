@@ -270,7 +270,7 @@ def export_backup():
     predictions = Prediction.query.all()
     
     data = {
-        "users": [{"id": u.id, "email": u.email, "name": u.name, "password_hash": u.password_hash, "is_admin": u.is_admin} for u in users],
+        "users": [{"id": u.id, "email": u.email, "name": u.name, "is_admin": u.is_admin} for u in users],
         "matches": [{"id": m.id, "group_name": m.group_name, "date_time_str": m.date_time_str, "team1": m.team1, "team2": m.team2, "result_1": m.result_1, "result_2": m.result_2, "played": m.played, "start_time": m.start_time.isoformat() if m.start_time else None, "highlights_url": m.highlights_url} for m in matches],
         "predictions": [{"id": p.id, "user_id": p.user_id, "match_id": p.match_id, "pred_1": p.pred_1, "pred_2": p.pred_2, "points": p.points, "updated_at": p.updated_at.isoformat() if p.updated_at else None} for p in predictions]
     }
@@ -313,10 +313,9 @@ def import_backup():
                 if existing:
                     existing.email = u['email']
                     existing.name = u['name']
-                    existing.password_hash = u['password_hash']
                     existing.is_admin = u.get('is_admin', False)
                 else:
-                    new_u = User(id=u['id'], email=u['email'], name=u['name'], password_hash=u['password_hash'], is_admin=u.get('is_admin', False))
+                    new_u = User(id=u['id'], email=u['email'], name=u['name'], is_admin=u.get('is_admin', False))
                     db.session.add(new_u)
                     
             # Dodaj Mecze
