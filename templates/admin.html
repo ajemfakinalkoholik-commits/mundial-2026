@@ -5,10 +5,19 @@
     <h1>Pulpit Administratora</h1>
     <p style="color: var(--text-secondary);">Wpisz oficjalne wyniki meczów. System automatycznie przeliczy punkty wszystkim graczom.</p>
     
-    <div style="margin-top: 20px;">
+    <div style="margin-top: 20px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
         <a href="{{ url_for('export_csv') }}" style="display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
-            📊 Pobierz Logi Zakładów (CSV)
+            📊 Pobierz Logi (CSV)
         </a>
+        <a href="{{ url_for('export_backup') }}" style="display: inline-block; padding: 10px 20px; background: #17a2b8; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+            💾 Pobierz Pełną Kopię Bazy (.json)
+        </a>
+        <form action="{{ url_for('import_backup') }}" method="POST" enctype="multipart/form-data" style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 8px;">
+            <input type="file" name="backup_file" accept=".json" required style="color: white; font-size: 0.9em; max-width: 200px;">
+            <button type="submit" style="padding: 8px 15px; background: #dc3545; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                📂 Wgraj Kopię Bazy
+            </button>
+        </form>
     </div>
 </div>
 
