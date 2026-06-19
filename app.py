@@ -499,6 +499,7 @@ def calculate_points(match_id):
     db.session.commit()
 
 with app.app_context():
+    db.create_all()
     # Bezpieczna migracja - dodanie kolumny na skróty wideo
     from sqlalchemy import text
     try:
