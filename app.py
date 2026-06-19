@@ -135,9 +135,17 @@ def logout():
 def dashboard():
     sort_by = request.args.get('sort', 'group')
     filter_val = request.args.get('filter', 'all')
+    phase = request.args.get('phase', 'group')
     
     # Base query for matches
     matches_query = Match.query
+    
+    KNOCKOUT_GROUPS = ["1/16 Finału", "1/8 Finału", "Ćwierćfinały", "Półfinały", "Mecz o 3. miejsce", "Finał"]
+    
+    if phase == 'knockout':
+        matches_query = matches_query.filter(Match.group_name.in_(KNOCKOUT_GROUPS))
+    else:
+        matches_query = matches_query.filter(~Match.group_name.in_(KNOCKOUT_GROUPS))
     
     if filter_val == 'upcoming':
         matches_query = matches_query.filter_by(played=False)
@@ -436,9 +444,13 @@ def admin():
         
         new_date = request.form.get('new_date')
         highlights_url = request.form.get('highlights_url')
+        team1 = request.form.get('team1')
+        team2 = request.form.get('team2')
         
         match = db.session.get(Match, match_id)
         if match:
+            if team1: match.team1 = team1.strip().upper()
+            if team2: match.team2 = team2.strip().upper()
             if res_1 == "" or res_2 == "":
                 match.result_1 = None
                 match.result_2 = None
@@ -507,6 +519,34 @@ with app.app_context():
         db.session.add(setup_admin)
         db.session.commit()
         print("Utworzono tymczasowe konto Admin_Setup.")
+        
+    # Inicjalizacja fazy pucharowej
+    if Match.query.filter_by(group_name='1/16 Finału').count() == 0:
+        knockout_data = [
+            ("1/16 Finału", "2026-06-28T21:00"), ("1/16 Finału", "2026-06-29T19:00"),
+            ("1/16 Finału", "2026-06-29T22:30"), ("1/16 Finału", "2026-06-30T03:00"),
+            ("1/16 Finału", "2026-06-30T19:00"), ("1/16 Finału", "2026-06-30T23:00"),
+            ("1/16 Finału", "2026-07-01T03:00"), ("1/16 Finału", "2026-07-01T18:00"),
+            ("1/16 Finału", "2026-07-01T22:00"), ("1/16 Finału", "2026-07-02T02:00"),
+            ("1/16 Finału", "2026-07-02T21:00"), ("1/16 Finału", "2026-07-03T01:00"),
+            ("1/16 Finału", "2026-07-03T05:00"), ("1/16 Finału", "2026-07-03T20:00"),
+            ("1/16 Finału", "2026-07-04T00:00"), ("1/16 Finału", "2026-07-04T03:30"),
+            ("1/8 Finału", "2026-07-04T19:00"), ("1/8 Finału", "2026-07-04T23:00"),
+            ("1/8 Finału", "2026-07-05T22:00"), ("1/8 Finału", "2026-07-06T02:00"),
+            ("1/8 Finału", "2026-07-06T21:00"), ("1/8 Finału", "2026-07-07T02:00"),
+            ("1/8 Finału", "2026-07-07T18:00"), ("1/8 Finału", "2026-07-07T22:00"),
+            ("Ćwierćfinały", "2026-07-09T22:00"), ("Ćwierćfinały", "2026-07-10T21:00"),
+            ("Ćwierćfinały", "2026-07-11T23:00"), ("Ćwierćfinały", "2026-07-12T03:00"),
+            ("Półfinały", "2026-07-14T21:00"), ("Półfinały", "2026-07-15T21:00"),
+            ("Mecz o 3. miejsce", "2026-07-18T23:00"), ("Finał", "2026-07-19T21:00")
+        ]
+        for group, dt_str in knockout_data:
+            st = datetime.strptime(dt_str, "%Y-%m-%dT%H:%M")
+            date_time_str = f"{st.strftime('%Y-%m-%d')} | {st.strftime('%H:%M')}"
+            m = Match(group_name=group, start_time=st, date_time_str=date_time_str, team1="TBD", team2="TBD")
+            db.session.add(m)
+        db.session.commit()
+        print("Dodano mecze fazy pucharowej.")
         
     # Bezpieczna migracja - dodanie kolumny na skróty wideo
     from sqlalchemy import text

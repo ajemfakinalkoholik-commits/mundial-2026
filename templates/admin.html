@@ -57,13 +57,17 @@
                 <input type="datetime-local" name="new_date" value="{{ m.start_time.strftime('%Y-%m-%dT%H:%M') if m.start_time else '' }}" style="padding: 5px; border-radius: 4px; border: 1px solid #555; background: #222; color: white; margin-bottom: 5px; width: 100%; box-sizing: border-box;">
                 <input type="url" name="highlights_url" value="{{ m.highlights_url if m.highlights_url else '' }}" placeholder="Link do skrótu YouTube" style="padding: 5px; border-radius: 4px; border: 1px solid #555; background: #222; color: white; width: 100%; box-sizing: border-box; font-size: 0.8rem;">
             </td>
-            <td style="padding: 15px; font-weight: bold;">{{ m.team1 }}</td>
             <td style="padding: 15px;">
-                <input type="number" name="res_1" style="width: 50px; padding: 5px; text-align: center; border-radius: 4px; border: 1px solid #555; background: #222; color: white;" value="{{ m.result_1 if m.result_1 is not none else '' }}">
-                :
-                <input type="number" name="res_2" style="width: 50px; padding: 5px; text-align: center; border-radius: 4px; border: 1px solid #555; background: #222; color: white;" value="{{ m.result_2 if m.result_2 is not none else '' }}">
+                <input type="text" name="team1" value="{{ m.team1 }}" style="width: 50px; text-align: center; padding: 8px; border-radius: 4px; border: 1px solid #555; background: #222; color: white; font-weight: bold;">
             </td>
-            <td style="padding: 15px; font-weight: bold;">{{ m.team2 }}</td>
+            <td style="padding: 15px; min-width: 120px;">
+                <input type="number" name="res_1" value="{{ m.result_1 if m.result_1 is not none else '' }}" min="0" style="width: 40px; text-align: center; padding: 8px; border-radius: 4px; border: 1px solid #555; background: #222; color: white;">
+                <span style="margin: 0 5px; color: var(--text-secondary);">:</span>
+                <input type="number" name="res_2" value="{{ m.result_2 if m.result_2 is not none else '' }}" min="0" style="width: 40px; text-align: center; padding: 8px; border-radius: 4px; border: 1px solid #555; background: #222; color: white;">
+            </td>
+            <td style="padding: 15px;">
+                <input type="text" name="team2" value="{{ m.team2 }}" style="width: 50px; text-align: center; padding: 8px; border-radius: 4px; border: 1px solid #555; background: #222; color: white; font-weight: bold;">
+            </td>
             <td style="padding: 15px;">
                 <button type="submit" style="padding: 8px 15px; background: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer;">Zapisz Oficjalny Wynik</button>
             </td>
