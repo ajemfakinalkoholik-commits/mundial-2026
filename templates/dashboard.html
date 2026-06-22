@@ -99,6 +99,12 @@
                     </div>
                 {% endif %}
                 
+                {% if m.group_name in ['1/16 Finału', '1/8 Finału', 'Ćwierćfinały', 'Półfinały', 'Mecz o 3. miejsce', 'Finał'] %}
+                    <div style="font-size: 0.75rem; color: #dc3545; text-align: center; margin-bottom: 8px; font-weight: bold; background: rgba(220, 53, 69, 0.1); padding: 4px; border-radius: 4px;">
+                        Wynik meczu 90 + czas doliczony (bez dogrywki i karnych)
+                    </div>
+                {% endif %}
+                
                 <div class="teams">
                     <div class="team">
                         <img src="https://flagcdn.com/w40/{{ m.team1 | flag }}.png" alt="{{ m.team1 }}" onerror="this.onerror=null; this.src='https://placehold.co/40x26?text={{ m.team1 }}'">
