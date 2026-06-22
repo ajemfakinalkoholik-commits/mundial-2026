@@ -1,5 +1,53 @@
-{
-  "artifactType":  "ARTIFACT_TYPE_OTHER",
-  "summary":  "Admin template",
-  "updatedAt":  "2026-06-08T03:53:45.709502900Z"
-}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundial 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/53/53283.png">
+    <meta name="theme-color" content="#dc3545">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="navbar-brand">🏆 Mundial 2026</a>
+        {% if current_user.is_authenticated %}
+        <div class="navbar-links">
+            <a href="{{ url_for('dashboard') }}">Pulpit</a>
+            {% if current_user.is_admin %}
+            <a href="{{ url_for('admin') }}">Admin</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}">Wyloguj ({{ current_user.name }})</a>
+        </div>
+        {% endif %}
+    </nav>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}")
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
