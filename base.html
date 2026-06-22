@@ -13,17 +13,18 @@
 <body>
     <nav class="navbar">
         <a href="{{ url_for('index') }}" class="navbar-brand">🏆 Mundial 2026</a>
-        {% if current_user.is_authenticated %}
         <div class="navbar-links">
+            <button id="install-btn" style="display: none; background: var(--accent); color: white; border: none; padding: 5px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.8rem; margin-right: 10px;">📱 Zainstaluj Appkę</button>
+            {% if current_user.is_authenticated %}
             <a href="{{ url_for('dashboard') }}">Pulpit</a>
             {% if current_user.is_admin %}
             <a href="{{ url_for('admin') }}">Admin</a>
             {% endif %}
             <a href="{{ url_for('logout') }}">Wyloguj ({{ current_user.name }})</a>
+            {% endif %}
         </div>
-        {% endif %}
     </nav>
-
+    
     <div class="container">
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
@@ -37,6 +38,7 @@
     </div>
 
     <script>
+        // Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}")
@@ -48,6 +50,37 @@
                     });
             });
         }
+
+        // PWA Install Prompt Logic
+        let deferredPrompt;
+        const installBtn = document.getElementById('install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+            // Update UI notify the user they can install the PWA
+            installBtn.style.display = 'inline-block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // Show the install prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                const { outcome } = await deferredPrompt.userChoice;
+                // We no longer need the prompt. Clear it up.
+                deferredPrompt = null;
+                // Hide the button
+                installBtn.style.display = 'none';
+            }
+        });
+        
+        // Hide button if already installed
+        window.addEventListener('appinstalled', (evt) => {
+            installBtn.style.display = 'none';
+        });
     </script>
 </body>
 </html>
